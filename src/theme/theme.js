@@ -46,8 +46,8 @@ spacing.medium = 20;
 spacing.large = 40;
 spacing.extraLarge = 60;
 spacing.screenEdgeMarginH = 20;
-export const buttonSpacingH = [12, 12, 18];
-export const buttonSpacingV = [4, 6, 10];
+export const buttonSpacingH = [12, 12, 18, 24];
+export const buttonSpacingV = [4, 6, 10, 14];
 
 const theme = {
   typeScale,

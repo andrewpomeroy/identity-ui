@@ -58,7 +58,7 @@ function EntryView() {
           <ModalBlockSpacer size="large" />
           <FlexContainer justifyContent="flex-end">
             <FlexItem auto>
-              <PrimaryButton buttonSpacing={2}>Sign In</PrimaryButton>
+              <PrimaryButton buttonSpacing={3}>Sign In</PrimaryButton>
             </FlexItem>
           </FlexContainer>
         </ModalBlock>

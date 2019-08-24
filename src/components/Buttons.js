@@ -6,7 +6,7 @@ import { borders, space, color, fontSize, fontWeight } from 'styled-system';
 import { buttonSpacing } from '../styleFunctions/ButtonStyleFunctions';
 
 const buttonStyles = {
-  borderRadius: 5
+  borderRadius: 3
 }
 
 export const Button = styled.button`
@@ -28,6 +28,7 @@ export const PrimaryButton = (props, styleProps) => (
   <Button
     backgroundColor="primary"
     color="white"
+    fontWeight="500"
     {...props}
     {...styleProps}>
     {props.children}</Button>
@@ -37,6 +38,7 @@ export const HollowBlueButton = (props, styleProps) => (
   <Button
     border="2px solid"
     borderColor="electricBlue"
+    borderRadius="5"
     color="electricBlue"
     fontWeight="600"
     {...props}

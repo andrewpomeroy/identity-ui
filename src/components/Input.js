@@ -24,8 +24,8 @@ const inputFocusedStyleProps = {
 }
 
 const inputLabelStyleProps = {
-  fontSize: 14,
-  fontWeight: 400,
+  fontSize: 16,
+  fontWeight: 500,
   color: colorMap.labelText,
   marginBottom: 8
 }
