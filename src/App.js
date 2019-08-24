@@ -1,25 +1,38 @@
 import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { ThemeProvider } from 'emotion-theming';
+import MainView from './MainView';
+// import { BrowserRouter as Router, Route, Link, Redirect } from "react-router-dom";
+import { Global, css } from '@emotion/core';
+import { MainContextProvider } from './context/MainContext';
+import mappedTheme from './theme/themeMapping';
 
-function App() {
+const globalStyles = css`
+  body, input, button, textarea, select, h1, h2, h3, h4, h5, h6 {
+    /* font-family: inherit; */
+  }
+  html, body {
+    height: 100vh;
+    width: 100vw;
+  }
+  body, #root {
+    flex: 1;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+  }
+`
+
+function App(props) {
+  
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+      <Global styles={globalStyles}></Global>
+      <ThemeProvider theme={mappedTheme}>
+        <MainContextProvider>
+          <MainView></MainView>
+        </MainContextProvider>
+      </ThemeProvider>
+    </>
   );
 }
 

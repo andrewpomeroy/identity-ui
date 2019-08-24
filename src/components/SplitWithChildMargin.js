@@ -1,0 +1,40 @@
+import React from 'react';
+
+import styled from '@emotion/styled/macro';
+
+const SplitWithChildMarginWrapper = styled.div`
+  display: flex;
+  flex-direction: ${props => props.vertical ? 'column' : 'row'};
+`
+
+const SplitWithChildMargin = (props) => {
+  let margin = props.gutter !== undefined ? (props.gutter / 2) : 12;
+  margin = typeof(props.gutter) === 'string' ? margin : (margin + 'px');
+  const { children, usePadding, ...rest } = props;
+
+  return (
+    <SplitWithChildMarginWrapper {...rest}>
+      {children && children.length 
+      ? children.map((child, index) => {
+        const isFirst = index === 0;
+        const isLast = index === children.length - 1;
+        return React.cloneElement(child, {
+          key: index,
+          ...child.props,
+          style: {
+            ...child.props.style,
+            marginLeft: !usePadding && isFirst ? undefined : margin,
+            marginRight: !usePadding && isLast ? undefined : margin,
+            paddingLeft: usePadding && isFirst ? undefined : margin,
+            paddingRight: usePadding && isLast ? undefined : margin
+          },
+        })
+      })
+      : children
+    }
+    </SplitWithChildMarginWrapper>
+
+  )
+}
+
+export default SplitWithChildMargin
