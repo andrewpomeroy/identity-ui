@@ -1,10 +1,15 @@
 import React from 'react';
 
 import styled from '@emotion/styled/macro';
+import { flexbox } from '../styleFunctions/StyleFunctions';
 
 const SplitWithChildMarginWrapper = styled.div`
   display: flex;
   flex-direction: ${props => props.vertical ? 'column' : 'row'};
+  align-items: inherit;
+  align-content: inherit;
+  justify-content: inherit;
+  ${flexbox}
 `
 
 const SplitWithChildMargin = (props) => {
