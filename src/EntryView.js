@@ -3,14 +3,16 @@ import landingBG from './clientAssets/landing-bg.jpg';
 import styled from '@emotion/styled/macro';
 import { HollowBlueButton, Button, PrimaryButton } from './components/Buttons';
 import ModalBlock from './components/ModalBlock';
-import AppBrand from './components/AppBrand';
-import { Heading4 } from './theme/commonType';
+import AppBrand, { AppBrandWithSubhead } from './components/AppBrand';
+import { Heading4, UnstyledH2, UnstyledHeading, getComputedLineHeight } from './theme/commonType';
 import Input, { InputLabel } from './components/Input';
 import { FlexContainer, FlexItem } from './components/commonLayout';
 import arrowSvg from './icons/arrow.svg';
 import WrappedInlineSvg from './components/WrappedInlineSvg';
 import SplitWithChildMargin from './components/SplitWithChildMargin';
 import { spacing } from './theme/theme';
+import { typeScaleMap } from './theme/themeMapping';
+import { Arrow, Chevron } from './components/ArrowComponents';
 
 const LandingBackground = styled.div`
   flex: 1;
@@ -49,6 +51,12 @@ const ModalBlockTitle = styled(Heading4)`
     font-weight: 700;
   }
 `
+const ModalBlockTitleSmall = styled(ModalBlockTitle)`
+  font-size: ${typeScaleMap.h5}px;
+  line-height: ${getComputedLineHeight('h4')}px;
+  text-overflow: ellipsis;
+  overflow: hidden;
+`
 
 const IconStyle = styled.div`
   /* position: absolute; */
@@ -85,13 +93,11 @@ const ModalPagerDom = styled.div`
   overflow: hidden;
 `
 
-const ModalPager = ({render, ...props}) => {
+const ModalPager = ({children, ...props}) => {
   const [currentPage, setPage] = useState(0);
-  console.log(render);
-  console.log(props);
   return (
       <ModalPagerDom>
-        {render(currentPage, setPage)}
+        {children(currentPage, setPage)}
       </ModalPagerDom>
   )
 }
@@ -137,25 +143,27 @@ function EntryView() {
     <LandingBackground>
       <CenterContainer>
         <ModalBlock>
-          <AppBrand large />
-          <ModalBlockSpacer size="default" />
-            {/* <HollowBlueButton>aaaaah</HollowBlueButton> */}
-          <ModalPager render={(currentPage, setPage) => (
+          <AppBrandWithSubhead large />
+          <ModalBlockSpacer size="small" />
+          <ModalPager>
+          {(currentPage, setPage) => 
             <>
               <ModalPage page={0} currentPage={currentPage}>
+                <ModalBlockTitle as="div">&nbsp;</ModalBlockTitle>
                 <ModalBlockTitle as="h2">Sign in to your account</ModalBlockTitle>
-                <ModalBlockSpacer size="default" />
+                <ModalBlockSpacer size="small" />
                 <InputLabel>Username</InputLabel>
                 <Input />
                 <ModalBlockSpacer size="large" />
                 <FlexContainer justifyContent="flex-end">
                   <FlexItem auto>
+                    {/* TODO: Replace this with an icon-button pattern */}
                     <PrimaryButton buttonSpacing={3} onClick={() => setPage(1)}>
                       <FlexContainer alignItems="center">
                         <SplitWithChildMargin gutter={spacing[0]}>
                           <FlexItem>Next</FlexItem>
-                          <FlexItem auto>
-                            <WrappedInlineSvg src={arrowSvg} stroke></WrappedInlineSvg>
+                          <FlexItem auto style={{marginTop: -5, marginBottom: -5}}>
+                            <Arrow></Arrow>
                           </FlexItem>
                         </SplitWithChildMargin>
                       </FlexContainer>
@@ -164,8 +172,14 @@ function EntryView() {
                 </FlexContainer>
               </ModalPage>
               <ModalPage page={1} currentPage={currentPage}>
-                <ModalBlockTitle as="h2">Signing in as <strong>andrewmichaelpomeroy@gmail.com</strong></ModalBlockTitle>
-                <ModalBlockSpacer size="default" />
+                <FlexContainer alignItems="center">
+                  <FlexItem></FlexItem>
+                </FlexContainer>
+                <UnstyledHeading as="h2">
+                  <ModalBlockTitleSmall as="div">Signing in as</ModalBlockTitleSmall>
+                  <ModalBlockTitleSmall as="div" title="andrewmichaelpomeroy@gmail.com"><strong>andrewmichaelpomeroy@gmail.com</strong></ModalBlockTitleSmall>
+                </UnstyledHeading>
+                <ModalBlockSpacer size="small" />
                 <InputLabel>Password</InputLabel>
                 <Input type="password" />
                 <ModalBlockSpacer size="large" />
@@ -181,8 +195,8 @@ function EntryView() {
                 </FlexItem>
                 </FlexContainer>
               </ModalPage>
-            </>
-          )}></ModalPager>
+            </>}
+          </ModalPager>
         </ModalBlock>
       </CenterContainer>
     </LandingBackground>

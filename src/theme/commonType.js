@@ -28,8 +28,17 @@ export const Heading6 = styled(HeadingBase)`
   font-size: ${typeScaleMap.h6}px;
 `
 
+export const UnstyledHeading = styled.css`
+  font-size: 1em;
+  font-weight: inherit;
+  margin: 0;
+`
+
 export const getLineHeight = (level) => {
   return lineHeightMap[level];
+}
+export const getComputedLineHeight = (level) => {
+  return lineHeightMap[level] * typeScaleMap[level];
 }
 
 export const CutoffText = styled.div`
