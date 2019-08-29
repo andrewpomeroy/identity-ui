@@ -9,8 +9,10 @@ const buttonStyles = {
 }
 
 export const Button = styled.button`
+  color: inherit;
   border: 0;
   border-radius: ${buttonStyles.borderRadius}px;
+  padding: .9em 1.5em;
   ${borders}
   ${color}
   ${fontSize}
@@ -19,8 +21,36 @@ export const Button = styled.button`
   cursor: pointer;
   &:focus {
     outline: 0;
+  } 
+`;
+
+const GhostButtonStyles = `
+  background-color: transparent;
+  &:hover, &:focus {
+    background-color: ${colorMap.transparentHighlight};
   }
-  
+`;
+
+export const GhostButton = styled(Button)`
+  ${GhostButtonStyles}
+`;
+
+const IconButtonStyle = styled(Button)`
+  padding: ${props => props.padding}px;
+  width: ${props => props.size};
+  height: ${props => props.size};
+`
+
+export const IconButton = ({icon, ...props}) => {
+  return (<IconButtonStyle {...props}>{React.cloneElement(icon, { size: '100%' })}</IconButtonStyle>);
+}
+IconButton.defaultProps = {
+  padding: 4,
+  size: '1.5em'
+}
+
+export const GhostIconButton = styled(IconButton)`
+  ${GhostButtonStyles}
 `
 
 export const PrimaryButton = (props, styleProps) => (

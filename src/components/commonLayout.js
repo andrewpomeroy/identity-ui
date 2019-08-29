@@ -65,9 +65,9 @@ export const Column = styled.div`
 `
 
 export const FlexContainer = styled.div`
-  ${flexbox}
   display: flex;
   flex-direction: ${props => props.vertical ? 'column' : 'row'};
+  ${flexbox}
 ` 
 
 export const FlexItem = styled.div`

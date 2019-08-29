@@ -1,7 +1,7 @@
-import React, {useState, useContext} from 'react';
+import React, {useState } from 'react';
 import landingBG from './clientAssets/landing-bg.jpg';
 import styled from '@emotion/styled/macro';
-import { HollowBlueButton, Button, PrimaryButton } from './components/Buttons';
+import { PrimaryButton, GhostButton, GhostIconButton, IconButton } from './components/Buttons';
 import ModalBlock from './components/ModalBlock';
 import AppBrand, { AppBrandWithSubhead } from './components/AppBrand';
 import { Heading4, UnstyledH2, UnstyledHeading, getComputedLineHeight } from './theme/commonType';
@@ -53,7 +53,7 @@ const ModalBlockTitle = styled(Heading4)`
 `
 const ModalBlockTitleSmall = styled(ModalBlockTitle)`
   font-size: ${typeScaleMap.h5}px;
-  line-height: ${getComputedLineHeight('h4')}px;
+  /* line-height: ${getComputedLineHeight('h4')}px; */
   text-overflow: ellipsis;
   overflow: hidden;
 `
@@ -160,7 +160,7 @@ function EntryView() {
                     {/* TODO: Replace this with an icon-button pattern */}
                     <PrimaryButton buttonSpacing={3} onClick={() => setPage(1)}>
                       <FlexContainer alignItems="center">
-                        <SplitWithChildMargin gutter={spacing[0]}>
+                        <SplitWithChildMargin gutter={8}>
                           <FlexItem>Next</FlexItem>
                           <FlexItem auto style={{marginTop: -5, marginBottom: -5}}>
                             <Arrow></Arrow>
@@ -172,13 +172,24 @@ function EntryView() {
                 </FlexContainer>
               </ModalPage>
               <ModalPage page={1} currentPage={currentPage}>
-                <FlexContainer alignItems="center">
-                  <FlexItem></FlexItem>
+                <FlexContainer flexDirection="column" justifyContent="flex-end" style={{height: getComputedLineHeight('h4') * 2}}>
+                  <FlexItem auto>
+                    <SplitWithChildMargin gutter={8}>
+                      <FlexItem auto>
+                        <GhostIconButton
+                          onClick={() => setPage(0)}
+                          size={`${getComputedLineHeight('h5')}px`}
+                          icon={<Arrow direction="left"></Arrow>} />
+                      </FlexItem>
+                      <FlexItem>
+                        <UnstyledHeading as="h2">
+                          <ModalBlockTitleSmall as="div">Signing in as</ModalBlockTitleSmall>
+                          <ModalBlockTitleSmall as="div" title="andrewmichaelpomeroy@gmail.com"><strong>andrewmichaelpomeroy@gmail.com</strong></ModalBlockTitleSmall>
+                        </UnstyledHeading>
+                      </FlexItem>
+                    </SplitWithChildMargin>
+                  </FlexItem>
                 </FlexContainer>
-                <UnstyledHeading as="h2">
-                  <ModalBlockTitleSmall as="div">Signing in as</ModalBlockTitleSmall>
-                  <ModalBlockTitleSmall as="div" title="andrewmichaelpomeroy@gmail.com"><strong>andrewmichaelpomeroy@gmail.com</strong></ModalBlockTitleSmall>
-                </UnstyledHeading>
                 <ModalBlockSpacer size="small" />
                 <InputLabel>Password</InputLabel>
                 <Input type="password" />
