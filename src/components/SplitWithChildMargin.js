@@ -13,7 +13,7 @@ const SplitWithChildMarginWrapper = styled.div`
 `
 
 const SplitWithChildMargin = (props) => {
-  let margin = props.gutter !== undefined ? (props.gutter / 2) : 12;
+  let margin = props.gutter / 2;
   margin = typeof(props.gutter) === 'string' ? margin : (margin + 'px');
   const { children, usePadding, ...rest } = props;
 
@@ -28,10 +28,10 @@ const SplitWithChildMargin = (props) => {
           ...child.props,
           style: {
             ...child.props.style,
-            marginLeft: !usePadding && isFirst ? undefined : margin,
-            marginRight: !usePadding && isLast ? undefined : margin,
-            paddingLeft: usePadding && isFirst ? undefined : margin,
-            paddingRight: usePadding && isLast ? undefined : margin
+            marginLeft: usePadding || isFirst ? undefined : margin,
+            marginRight: usePadding || isLast ? undefined : margin,
+            paddingLeft: !usePadding || isFirst ? undefined : margin,
+            paddingRight: !usePadding || isLast ? undefined : margin
           },
         })
       })
@@ -40,6 +40,11 @@ const SplitWithChildMargin = (props) => {
     </SplitWithChildMarginWrapper>
 
   )
+}
+
+SplitWithChildMargin.defaultProps = {
+  usePadding: false,
+  gutter: 12
 }
 
 export default SplitWithChildMargin
