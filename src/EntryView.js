@@ -13,6 +13,7 @@ import SplitWithChildMargin from './components/SplitWithChildMargin';
 import { spacing } from './theme/theme';
 import { typeScaleMap } from './theme/themeMapping';
 import { Arrow, Chevron } from './components/ArrowComponents';
+import InputWithValidation from './components/InputWithValidation';
 
 const LandingBackground = styled.div`
   flex: 1;
@@ -153,7 +154,7 @@ function EntryView() {
                 <ModalBlockTitle as="h2">Sign in to your account</ModalBlockTitle>
                 <ModalBlockSpacer size="small" />
                 <InputLabel>Username</InputLabel>
-                <Input />
+                <InputWithValidation control={<Input autoComplete="off" />}></InputWithValidation>
                 <ModalBlockSpacer size="large" />
                 <FlexContainer justifyContent="flex-end">
                   <FlexItem auto>
@@ -192,7 +193,7 @@ function EntryView() {
                 </FlexContainer>
                 <ModalBlockSpacer size="small" />
                 <InputLabel>Password</InputLabel>
-                <Input type="password" />
+                <Input type="password"  autoComplete="new-password" />
                 <ModalBlockSpacer size="large" />
                 <FlexContainer justifyContent="flex-end">
                   <FlexItem auto>

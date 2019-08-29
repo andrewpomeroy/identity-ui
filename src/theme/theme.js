@@ -21,6 +21,7 @@ export const colors = {
   veryDarkBlue: '#16427d',
   // violet: '#719dff',
   violet: '#6fa1ff',
+  red: '#fa5252',
   nearWhite: '#f8f9fa',
   nearWhite2: '#f0f5fc',
   mediumGray: '#929292',

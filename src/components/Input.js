@@ -21,6 +21,11 @@ const inputFocusedStyleProps = {
   boxShadow: `0px 0px 2px ${colorMap.activeHighlight}`,
   outline: 0
 }
+const inputErrorStyleProps = {
+  borderColor: colorMap.error,
+  boxShadow: `0px 0px 2px ${colorMap.error}`,
+  // outline: 0
+}
 
 const inputLabelStyleProps = {
   fontSize: 16,
@@ -34,15 +39,19 @@ const Input = styled.input`
   font-size: ${inputStyleProps.fontSize}px;
   padding: ${inputStyleProps.paddingV}px ${inputStyleProps.paddingV}px;
   background-color: ${inputStyleProps.backgroundColor};
-  border: ${inputStyleProps.borderWidth}px solid ${inputStyleProps.borderColor};
+  border: ${inputStyleProps.borderWidth}px solid;
+  border-color: ${inputStyleProps.borderColor};
   border-radius: ${inputStyleProps.borderRadius}px;
   ::placeholder {
     color: ${inputStyleProps.placeholderColor};
   }
   &:focus {
     border-color: ${inputFocusedStyleProps.borderColor};
-    box-shadow: ${inputFocusedStyleProps.boxShadow};
     outline: ${inputFocusedStyleProps.outline};
+    box-shadow: ${props => props.isInvalid ? inputErrorStyleProps.boxShadow : inputFocusedStyleProps.boxShadow};
+  }
+  &, &:focus {
+    ${props => props.isInvalid && `border-color: ${inputErrorStyleProps.borderColor};`}
   }
 `
 

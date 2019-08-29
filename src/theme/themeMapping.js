@@ -14,6 +14,7 @@ export const colorMap = {
   inputBorder: colors.violet,
   inputText: colors.darkBlue,
   labelText: colors.darkGreen,
+  error: colors.red,
   cardBorder: 'transparent',
   cardBgColor: 'white',
   cardHighlight: colors.electricBlue,
