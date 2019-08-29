@@ -1,4 +1,3 @@
-import React from 'react';
 import styled from '@emotion/styled/macro';
 import { spacing } from '../theme/theme';
 import { flexbox } from '../styleFunctions/StyleFunctions';

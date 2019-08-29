@@ -1,8 +1,7 @@
 import React from 'react';
 import styled from '@emotion/styled/macro';
-import { colors } from '../theme/theme';
 import { colorMap } from '../theme/themeMapping';
-import { borders, space, color, fontSize, fontWeight } from 'styled-system';
+import { borders, color, fontSize, fontWeight } from 'styled-system';
 import { buttonSpacing } from '../styleFunctions/ButtonStyleFunctions';
 
 const buttonStyles = {

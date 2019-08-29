@@ -1,5 +1,4 @@
 import { colorMap } from "../theme/themeMapping";
-import Color from 'color';
 import styled from "@emotion/styled/macro";
 
 

@@ -1,5 +1,4 @@
-import React, { useContext } from 'react';
-import Header from './components/Header';
+import React from 'react';
 import EntryView from './EntryView';
 import styled from '@emotion/styled/macro';
 

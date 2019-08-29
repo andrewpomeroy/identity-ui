@@ -1,6 +1,4 @@
-import React from "react";
 import styled from '@emotion/styled/macro';
-import { typeScale } from "./theme";
 import { typeScaleMap, lineHeightMap, colorMap } from "./themeMapping";
 
 export const HeadingBase = styled.div`
