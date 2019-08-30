@@ -59,7 +59,7 @@ export const InputLabel = styled.label`
   display: inline-block;
   font-size: ${inputLabelStyleProps.fontSize}px;
   font-weight: ${inputLabelStyleProps.fontWeight};
-  color: ${inputLabelStyleProps.color};
+  color: ${props => props.isInvalid ? colorMap.error : inputLabelStyleProps.color};
   margin-bottom: ${inputLabelStyleProps.marginBottom}px;
 `
 

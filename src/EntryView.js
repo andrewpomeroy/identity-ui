@@ -153,9 +153,9 @@ function EntryView() {
                 <ModalBlockTitle as="div">&nbsp;</ModalBlockTitle>
                 <ModalBlockTitle as="h2">Sign in to your account</ModalBlockTitle>
                 <ModalBlockSpacer size="small" />
-                <InputLabel>Username</InputLabel>
-                <InputWithValidation control={<Input autoComplete="off" />}></InputWithValidation>
-                <ModalBlockSpacer size="large" />
+                {/* <InputLabel>Username</InputLabel> */}
+                <InputWithValidation label="Username" control={<Input autoComplete="off" />}></InputWithValidation>
+                <ModalBlockSpacer size="default" />
                 <FlexContainer justifyContent="flex-end">
                   <FlexItem auto>
                     {/* TODO: Replace this with an icon-button pattern */}
@@ -194,7 +194,7 @@ function EntryView() {
                 <ModalBlockSpacer size="small" />
                 <InputLabel>Password</InputLabel>
                 <Input type="password"  autoComplete="new-password" />
-                <ModalBlockSpacer size="large" />
+                <ModalBlockSpacer size="default" />
                 <FlexContainer justifyContent="flex-end">
                   <FlexItem auto>
                     <PrimaryButton buttonSpacing={3} onClick={() => setPage(0)}>
