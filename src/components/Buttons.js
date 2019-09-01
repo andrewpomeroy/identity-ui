@@ -23,6 +23,9 @@ export const Button = styled.button`
     outline: 0;
   } 
 `;
+Button.defaultProps = {
+  type: 'button'
+}
 
 const GhostButtonStyles = `
   background-color: transparent;

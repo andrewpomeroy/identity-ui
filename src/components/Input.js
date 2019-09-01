@@ -1,4 +1,5 @@
 import { colorMap } from "../theme/themeMapping";
+import Color from 'color';
 import styled from "@emotion/styled/macro";
 
 
@@ -23,6 +24,7 @@ const inputFocusedStyleProps = {
 }
 const inputErrorStyleProps = {
   borderColor: colorMap.error,
+  backgroundColor: Color(colorMap.error).fade(.9).string(),
   boxShadow: `0px 0px 2px ${colorMap.error}`,
   // outline: 0
 }
@@ -38,7 +40,7 @@ const Input = styled.input`
   width: 100%;
   font-size: ${inputStyleProps.fontSize}px;
   padding: ${inputStyleProps.paddingV}px ${inputStyleProps.paddingV}px;
-  background-color: ${inputStyleProps.backgroundColor};
+  background-color: ${props => props.isError ? inputErrorStyleProps.backgroundColor : inputFocusedStyleProps.backgroundColor};
   border: ${inputStyleProps.borderWidth}px solid;
   border-color: ${inputStyleProps.borderColor};
   border-radius: ${inputStyleProps.borderRadius}px;
@@ -48,10 +50,10 @@ const Input = styled.input`
   &:focus {
     border-color: ${inputFocusedStyleProps.borderColor};
     outline: ${inputFocusedStyleProps.outline};
-    box-shadow: ${props => props.isInvalid ? inputErrorStyleProps.boxShadow : inputFocusedStyleProps.boxShadow};
+    box-shadow: ${props => props.isError ? inputErrorStyleProps.boxShadow : inputFocusedStyleProps.boxShadow};
   }
   &, &:focus {
-    ${props => props.isInvalid && `border-color: ${inputErrorStyleProps.borderColor};`}
+    ${props => props.isError && `border-color: ${inputErrorStyleProps.borderColor};`}
   }
 `
 
@@ -59,7 +61,7 @@ export const InputLabel = styled.label`
   display: inline-block;
   font-size: ${inputLabelStyleProps.fontSize}px;
   font-weight: ${inputLabelStyleProps.fontWeight};
-  color: ${props => props.isInvalid ? colorMap.error : inputLabelStyleProps.color};
+  color: ${props => props.isError ? colorMap.error : inputLabelStyleProps.color};
   margin-bottom: ${inputLabelStyleProps.marginBottom}px;
 `
 

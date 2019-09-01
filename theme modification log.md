@@ -11,6 +11,8 @@
 * fix flexbox style functions in flexContainer in commonLayout
 * add placeholder red color to theme
 * add "error" to thememapping
+* add background color to input error styles
+* add default type of "button" to Button
 * Damn, lots of stuff in Buttons.. iconbutton stuff.. (need to figure out how to pass size prop with or without units)
 
 ## from personal library

@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { colorMap } from "../theme/themeMapping";
 import styled from "@emotion/styled/macro";
 import Input, {InputLabel} from "./Input";
+import PropTypes from 'prop-types';
 import { colors } from '../theme/theme';
 import uuid from 'uuid4';
 
@@ -31,27 +32,22 @@ const ValidationMessages = styled.div`
 `
 
 const InputWithValidation = (props) => {
-  const [inputValue, setInputValue] = useState('');
-  const [isValid, setIsValid] = useState(undefined);
+  const [isError, setisError] = useState(false);
   const [messages, setMessages] = useState([]);
   const [id, setId] = useState([]);
 
   useEffect(() => setId(uuid()), [])
 
-  useEffect(() => {
-    if (isValid === false) setMessages(['You suck']);
-    else setMessages([]);
-  }, [inputValue, isValid]);
+  const makeMessagesArray = (messages) => typeof(messages) === 'string' ? [messages] : messages;
 
-  const onChange = (event) => {
-    const value = event.target.value;
-    if (value === 'lol') setIsValid(false);
-    else setIsValid(true);
-    setInputValue(value);
-  }
+  useEffect(() => {
+    setisError(props.touched[props.name]  && props.errors[props.name]);
+    setMessages(props.touched[props.name] && props.errors[props.name] && makeMessagesArray(props.errors[props.name]) || []);
+  }, [props.name, props.errors, props.touched]);
+
 
   const controlLabelProps = {
-    isInvalid: isValid === false,
+    isError: isError,
     htmlFor: id
   }
 
@@ -60,32 +56,51 @@ const InputWithValidation = (props) => {
     : props.label 
       ? (<InputLabel {...controlLabelProps}>{props.label}</InputLabel>) 
       : null
+
+  const handleKeyDown = (event) => {
+    if (event.keyCode && event.keyCode === 13) {
+      if (!props.allowEnterKey) event.preventDefault();
+      if (props.onEnterKey) props.onEnterKey(event);
+    }
+    if (props.onKeyDown) props.onKeyDown(event);
+  }
  
-  const controlProps = {
+  const getStandardControlProps = (controlProps) => ({
     id,
-    onChange, 
-    value: inputValue,
-    isInvalid: isValid === false
-  };
+    onChange: props.onChange,
+    onBlur: props.onBlur,
+    name: props.name,
+    value: props.values[props.name] || '',
+    // value: inputValue,
+    isError,
+    onKeyDown: handleKeyDown,
+    type: controlProps.type || 'text'
+  });
 
-  const Control = React.cloneElement(props.control, {...controlProps})
-  
-
+  const Control = React.cloneElement(props.control, {...getStandardControlProps(props.control.props)})
 
   return (
     <InputContainer>
       {ControlLabel}
       {Control}
-      <ValidationMessages isValid={isValid}>
-        {!messages.length && 
+      <ValidationMessages isError={isError}>
+        {(!messages || !messages.length) && 
           <ValidationMessagePlaceholder />
         }
-        {!!messages.length && messages.map((message, index) => (
+        {messages && !!messages.length && messages.map((message, index) => (
           <ValidationMessage key={index}>{message}</ValidationMessage>
         ))}
       </ValidationMessages>
     </InputContainer>
   )
+}
+
+// TODO: round out prop types
+InputWithValidation.propTypes = {
+  name: PropTypes.string.isRequired,
+  onKeyDown: PropTypes.func,
+  onEnterKey: PropTypes.func,
+  allowEnterKey: PropTypes.bool
 }
 
 export default InputWithValidation;

@@ -1,4 +1,5 @@
 import React, {useState } from 'react';
+import { Formik } from 'formik';
 import landingBG from './clientAssets/landing-bg.jpg';
 import styled from '@emotion/styled/macro';
 import { PrimaryButton, GhostButton, GhostIconButton, IconButton } from './components/Buttons';
@@ -14,6 +15,21 @@ import { spacing } from './theme/theme';
 import { typeScaleMap } from './theme/themeMapping';
 import { Arrow, Chevron } from './components/ArrowComponents';
 import InputWithValidation from './components/InputWithValidation';
+import * as Yup from 'yup';
+import uuid from 'uuid4';
+
+
+const LoginSchema = Yup.object().shape({
+  email: Yup.string()
+    .email("Must be a valid email address")
+    .required('Required'),
+  password: Yup.string()
+    .required('Required')
+});
+const initialValues = {
+  email: '',
+  password: '',
+};
 
 const LandingBackground = styled.div`
   flex: 1;
@@ -35,9 +51,8 @@ const CenterContainer = styled.div`
   justify-content: center;
 `
 
-const ModalBlockBox = styled.div`
-  
-`
+const ModalBlockBox = styled.div``
+
 const modalBlockSpacerHeights = {
   small: 26,
   default: 36,
@@ -140,77 +155,126 @@ const ModalPage = (props) => {
 
 
 function EntryView() {
+  const [nextButtonEnabled, setNextButtonEnabled] = useState();
+
   return (
     <LandingBackground>
       <CenterContainer>
         <ModalBlock>
-          <AppBrandWithSubhead large />
-          <ModalBlockSpacer size="small" />
-          <ModalPager>
-          {(currentPage, setPage) => 
-            <>
-              <ModalPage page={0} currentPage={currentPage}>
-                <ModalBlockTitle as="div">&nbsp;</ModalBlockTitle>
-                <ModalBlockTitle as="h2">Sign in to your account</ModalBlockTitle>
+          <Formik
+            initialValues={initialValues}
+            validationSchema={LoginSchema}
+            validateOnChange={true}
+            onSubmit={(values, actions) => {
+              setTimeout(() => {
+                alert(JSON.stringify(values, null, 2));
+                actions.setSubmitting(false);
+              }, 500);
+            }}
+            render={({ handleSubmit, handleChange, handleBlur, setValues, setTouched, values, errors, touched }) => (
+            <React.Fragment>
+              <form onSubmit={handleSubmit}>
+                <AppBrandWithSubhead large />
                 <ModalBlockSpacer size="small" />
-                {/* <InputLabel>Username</InputLabel> */}
-                <InputWithValidation label="Username" control={<Input autoComplete="off" />}></InputWithValidation>
-                <ModalBlockSpacer size="default" />
-                <FlexContainer justifyContent="flex-end">
-                  <FlexItem auto>
-                    {/* TODO: Replace this with an icon-button pattern */}
-                    <PrimaryButton buttonSpacing={3} onClick={() => setPage(1)}>
-                      <FlexContainer alignItems="center">
-                        <SplitWithChildMargin gutter={8}>
-                          <FlexItem>Next</FlexItem>
-                          <FlexItem auto style={{marginTop: -5, marginBottom: -5}}>
-                            <Arrow></Arrow>
-                          </FlexItem>
-                        </SplitWithChildMargin>
-                      </FlexContainer>
-                    </PrimaryButton>
-                </FlexItem>
-                </FlexContainer>
-              </ModalPage>
-              <ModalPage page={1} currentPage={currentPage}>
-                <FlexContainer flexDirection="column" justifyContent="flex-end" style={{height: getComputedLineHeight('h4') * 2}}>
-                  <FlexItem auto>
-                    <SplitWithChildMargin gutter={8}>
-                      <FlexItem auto>
-                        <GhostIconButton
-                          onClick={() => setPage(0)}
-                          size={`${getComputedLineHeight('h5')}px`}
-                          icon={<Arrow direction="left"></Arrow>} />
+                <ModalPager>
+                {(currentPage, setPage) => 
+                  <>
+                    <ModalPage page={0} currentPage={currentPage}>
+                      <ModalBlockTitle as="div">&nbsp;</ModalBlockTitle>
+                      <ModalBlockTitle as="h2">Sign in to your account</ModalBlockTitle>
+                      <ModalBlockSpacer size="small" />
+                      <InputWithValidation 
+                        label="Email Address" 
+                        name="email" 
+                        onEnterKey={() => {
+                            values.email && !errors.email && setPage(1);
+                            setTouched({...touched, email: true});
+                        }}
+                        onChange={handleChange} 
+                        onBlur={handleBlur} 
+                        values={values} 
+                        errors={errors}
+                        touched={touched}
+                        control={
+                          <Input autoComplete={uuid()} />
+                        } />
+                      <ModalBlockSpacer size="default" />
+                      <FlexContainer justifyContent="flex-end">
+                        <FlexItem auto>
+                          {/* TODO: Replace this with an icon-button pattern */}
+                          <PrimaryButton buttonSpacing={3} onClick={() => { 
+                            values.email && !errors.email && setPage(1);
+                            setTouched({...touched, email: true});
+                          }}>
+                            <FlexContainer alignItems="center">
+                              <SplitWithChildMargin gutter={8}>
+                                <FlexItem>Next</FlexItem>
+                                <FlexItem auto style={{marginTop: -5, marginBottom: -5}}>
+                                  <Arrow></Arrow>
+                                </FlexItem>
+                              </SplitWithChildMargin>
+                            </FlexContainer>
+                          </PrimaryButton>
                       </FlexItem>
-                      <FlexItem>
-                        <UnstyledHeading as="h2">
-                          <ModalBlockTitleSmall as="div">Signing in as</ModalBlockTitleSmall>
-                          <ModalBlockTitleSmall as="div" title="andrewmichaelpomeroy@gmail.com"><strong>andrewmichaelpomeroy@gmail.com</strong></ModalBlockTitleSmall>
-                        </UnstyledHeading>
-                      </FlexItem>
-                    </SplitWithChildMargin>
-                  </FlexItem>
-                </FlexContainer>
-                <ModalBlockSpacer size="small" />
-                <InputLabel>Password</InputLabel>
-                <Input type="password"  autoComplete="new-password" />
-                <ModalBlockSpacer size="default" />
-                <FlexContainer justifyContent="flex-end">
-                  <FlexItem auto>
-                    <PrimaryButton buttonSpacing={3} onClick={() => setPage(0)}>
-                      <FlexContainer alignItems="center">
-                        <SplitWithChildMargin gutter={spacing[0]}>
-                          <FlexItem>Sign In</FlexItem>
-                        </SplitWithChildMargin>
                       </FlexContainer>
-                    </PrimaryButton>
-                </FlexItem>
-                </FlexContainer>
-              </ModalPage>
-            </>}
-          </ModalPager>
+                    </ModalPage>
+                    <ModalPage page={1} currentPage={currentPage}>
+                      <FlexContainer flexDirection="column" justifyContent="flex-end" style={{height: getComputedLineHeight('h4') * 2}}>
+                        <FlexItem auto>
+                          <SplitWithChildMargin gutter={8}>
+                            <FlexItem auto>
+                              <GhostIconButton
+                                onClick={() => {
+                                  setValues({...values, password: ''});
+                                  setTouched({...touched, password: false});
+                                  setPage(0)
+                                }}
+                                size={`${getComputedLineHeight('h5')}px`}
+                                icon={<Arrow direction="left"></Arrow>} />
+                            </FlexItem>
+                            <FlexItem>
+                              <UnstyledHeading as="h2">
+                                <ModalBlockTitleSmall as="div">Signing in as</ModalBlockTitleSmall>
+                                <ModalBlockTitleSmall as="div" title="{values.email}"><strong>{values.email}</strong></ModalBlockTitleSmall>
+                              </UnstyledHeading>
+                            </FlexItem>
+                          </SplitWithChildMargin>
+                        </FlexItem>
+                      </FlexContainer>
+                      <ModalBlockSpacer size="small" />
+                      <InputWithValidation
+                        label="Password"
+                        name="password"
+                        onChange={handleChange} 
+                        onBlur={handleBlur} 
+                        values={values} 
+                        errors={errors}
+                        touched={touched}
+                        control={
+                          <Input type="password" autoComplete="new-password"/>
+                        } />
+                      <ModalBlockSpacer size="default" />
+                      <FlexContainer justifyContent="flex-end">
+                        <FlexItem auto>
+                          <PrimaryButton buttonSpacing={3} type="submit">
+                            <FlexContainer alignItems="center">
+                              <SplitWithChildMargin gutter={spacing[0]}>
+                                <FlexItem>Sign In</FlexItem>
+                              </SplitWithChildMargin>
+                            </FlexContainer>
+                          </PrimaryButton>
+                      </FlexItem>
+                      </FlexContainer>
+                    </ModalPage>
+                  </>}
+                </ModalPager>
+              </form>
+              {/* <pre>{JSON.stringify(errors, '\t')}</pre>
+              <pre>{JSON.stringify(touched, '\t')}</pre> */}
+            </React.Fragment>
+          )} />
         </ModalBlock>
-      </CenterContainer>
+      </CenterContainer>  
     </LandingBackground>
   );
 }
