@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "@emotion/core": "^10.0.16",
+    "@emotion/is-prop-valid": "^0.8.2",
     "@emotion/styled": "^10.0.15",
     "color": "^3.1.2",
     "emotion": "^10.0.14",
@@ -14,6 +15,7 @@
     "react": "^16.9.0",
     "react-dom": "^16.9.0",
     "react-inlinesvg": "^1.1.6",
+    "react-pose": "^4.0.8",
     "react-scripts": "3.1.1",
     "styled-system": "4",
     "uuid4": "^1.1.4",

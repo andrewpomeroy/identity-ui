@@ -1,7 +1,8 @@
+import React, { useRef, useState, useEffect, forwardRef } from "react";
 import { colorMap } from "../theme/themeMapping";
 import Color from 'color';
 import styled from "@emotion/styled/macro";
-
+import isPropValid from '@emotion/is-prop-valid';
 
 const inputStyleProps = {
   fontSize: 18,
@@ -36,7 +37,7 @@ const inputLabelStyleProps = {
   marginBottom: 8
 }
 
-const Input = styled.input`
+const StyledInput = styled.input`
   width: 100%;
   font-size: ${inputStyleProps.fontSize}px;
   padding: ${inputStyleProps.paddingV}px ${inputStyleProps.paddingV}px;
@@ -56,6 +57,21 @@ const Input = styled.input`
     ${props => props.isError && `border-color: ${inputErrorStyleProps.borderColor};`}
   }
 `
+
+// const Input = forwardRef(({willAutoFocus, ...props}, ref) => {
+const Input = ({willAutoFocus, ...props}) => {
+  const someRef = useRef();
+  useEffect(() => {
+    if (willAutoFocus) {
+      if (someRef.current && document.activeElement !== someRef.current) {
+        someRef.current.focus();
+      }
+    }
+  }, [willAutoFocus])
+
+  return <StyledInput ref={someRef} { ...props} />
+};
+
 
 export const InputLabel = styled.label`
   display: inline-block;
