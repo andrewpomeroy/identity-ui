@@ -20,11 +20,13 @@ export const colors = {
   fadedBlue: '#5b86b0',
   veryDarkBlue: '#16427d',
   // violet: '#719dff',
-  violet: '#6fa1ff',
+  // violet: '#6fa1ff',
+  violet: 'hsl(219.2, 100%, 64.6%)',
   red: '#fa5252',
   nearWhite: '#f8f9fa',
   nearWhite2: '#f0f5fc',
   mediumGray: '#929292',
+  white: '#ffffff'
 }
 export const gradients = {
   hero: `linear-gradient(135deg, ${colors.turquoise}, 31.3%, ${colors.yellow})`
