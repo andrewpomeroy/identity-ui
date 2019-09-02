@@ -45,6 +45,13 @@ const InputWithValidation = (props) => {
     setMessages(props.touched[props.name] && props.errors[props.name] && makeMessagesArray(props.errors[props.name]) || []);
   }, [props.name, props.errors, props.touched]);
 
+  const handleKeyDown = (event) => {
+    if (event.keyCode && event.keyCode === 13) {
+      if (!props.allowEnterKey) event.preventDefault();
+      if (props.onEnterKey) props.onEnterKey(event);
+    }
+    if (props.onKeyDown) props.onKeyDown(event);
+  }
 
   const controlLabelProps = {
     isError: isError,
@@ -57,14 +64,6 @@ const InputWithValidation = (props) => {
     : props.label 
       ? (<InputLabel {...controlLabelProps}>{props.label}</InputLabel>) 
       : null
-
-  const handleKeyDown = (event) => {
-    if (event.keyCode && event.keyCode === 13) {
-      if (!props.allowEnterKey) event.preventDefault();
-      if (props.onEnterKey) props.onEnterKey(event);
-    }
-    if (props.onKeyDown) props.onKeyDown(event);
-  }
  
   const getStandardControlProps = (controlProps) => ({
     id: `${id}-control`,
@@ -75,8 +74,9 @@ const InputWithValidation = (props) => {
     // value: inputValue,
     isError,
     onKeyDown: handleKeyDown,
+    allowEnterKey: controlProps.allowEnterKey,
     type: controlProps.type || 'text',
-    "aria-describedby": `${controlProps.ariaDescribedBy} ${id}-messages`,
+    "aria-describedby": `${controlProps.ariaDescribedBy || ''} ${id}-messages`,
     "aria-invalid": !!isError
   });
 
@@ -89,7 +89,6 @@ const InputWithValidation = (props) => {
       <ValidationMessages 
         id={`${id}-messages`}
         isError={!!isError}
-        aria-required=""
         aria-live="assertive"
         aria-relevant="additions removals">
         {(!messages || !messages.length) && 

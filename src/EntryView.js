@@ -9,7 +9,6 @@ import { Heading4, UnstyledH2, UnstyledHeading, getComputedLineHeight } from './
 import Input, { InputLabel, DecoratedInput } from './components/Input';
 import { FlexContainer, FlexItem } from './components/commonLayout';
 import arrowSvg from './icons/arrow.svg';
-import WrappedInlineSvg from './components/WrappedInlineSvg';
 import SplitWithChildMargin from './components/SplitWithChildMargin';
 import { spacing } from './theme/theme';
 import { typeScaleMap } from './theme/themeMapping';
@@ -18,6 +17,7 @@ import InputWithValidation from './components/InputWithValidation';
 import * as Yup from 'yup';
 import uuid from 'uuid4';
 import posed, { PoseGroup } from 'react-pose';
+import ButtonLoaderShell from './components/ButtonLoaderShell';
 
 const LoginSchema = Yup.object().shape({
   email: Yup.string()
@@ -168,9 +168,9 @@ function EntryView() {
             validateOnChange={true}
             onSubmit={(values, actions) => {
               setTimeout(() => {
-                alert(JSON.stringify(values, null, 2));
+                alert("Success! \n\n" + JSON.stringify(values, null, 2));
                 actions.setSubmitting(false);
-              }, 500);
+              }, 1000);
             }}
             render={({ handleSubmit, handleChange, handleBlur, setValues, setTouched, isSubmitting, values, errors, touched }) => (
             <React.Fragment>
@@ -210,19 +210,23 @@ function EntryView() {
                         <FlexContainer justifyContent="flex-end">
                           <FlexItem auto>
                             {/* TODO: Replace this with an icon-button pattern */}
-                            <PrimaryButton buttonSpacing={3} onClick={() => {
-                              setPasswordAutofocus(false);
-                              values.email && !errors.email && pagerDispatch({type: 'increment'});
-                              setTouched({...touched, email: true});
-                            }}>
-                              <FlexContainer alignItems="center">
-                                <SplitWithChildMargin gutter={8}>
-                                  <FlexItem>Next</FlexItem>
-                                  <FlexItem auto style={{marginTop: -5, marginBottom: -5}}>
-                                    <Arrow></Arrow>
-                                  </FlexItem>
-                                </SplitWithChildMargin>
-                              </FlexContainer>
+                            <PrimaryButton
+                              buttonSpacing={3}
+                              onClick={() => {
+                                setPasswordAutofocus(false);
+                                values.email && !errors.email && pagerDispatch({type: 'increment'});
+                                setTouched({...touched, email: true});
+                              }}>
+                              <ButtonLoaderShell>
+                                <FlexContainer alignItems="center">
+                                  <SplitWithChildMargin gutter={8}>
+                                    <FlexItem>Next</FlexItem>
+                                    <FlexItem auto style={{marginTop: -5, marginBottom: -5}}>
+                                      <Arrow></Arrow>
+                                    </FlexItem>
+                                  </SplitWithChildMargin>
+                                </FlexContainer>
+                              </ButtonLoaderShell>
                             </PrimaryButton>
                         </FlexItem>
                         </FlexContainer>
@@ -263,23 +267,26 @@ function EntryView() {
                         <InputWithValidation
                           label="Password"
                           name="password"
+                          allowEnterKey={true}
                           onChange={handleChange} 
                           onBlur={handleBlur} 
                           values={values} 
                           errors={errors}
                           touched={touched}
                           control={
-                            <Input type="password" autoComplete="new-password" willAutoFocus={passwordAutofocus}/>
+                            <Input type="password" autoComplete={uuid()} willAutoFocus={passwordAutofocus}/>
                           } />
                         <ModalBlockSpacer size="default" />
                         <FlexContainer justifyContent="flex-end">
                           <FlexItem auto>
                             <PrimaryButton buttonSpacing={3} type="submit">
-                              <FlexContainer alignItems="center">
-                                <SplitWithChildMargin gutter={spacing[0]}>
-                                  <FlexItem>Sign In</FlexItem>
-                                </SplitWithChildMargin>
-                              </FlexContainer>
+                              <ButtonLoaderShell isLoading={isSubmitting} disabled={isSubmitting}>
+                                <FlexContainer alignItems="center">
+                                  <SplitWithChildMargin gutter={spacing[0]}>
+                                    <FlexItem>Sign In</FlexItem>
+                                  </SplitWithChildMargin>
+                                </FlexContainer>
+                              </ButtonLoaderShell>
                             </PrimaryButton>
                         </FlexItem>
                         </FlexContainer>

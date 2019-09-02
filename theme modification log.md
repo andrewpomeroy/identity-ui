@@ -23,6 +23,7 @@
 * add default type of "button" to Button
 * Damn, lots of stuff in Buttons.. iconbutton stuff.. (need to figure out how to pass size prop with or without units)
 * make Button position: relative;
+* Move away from styled-system stuff in favor of button style composition
 
 ## from personal library
 ### Spotmark
