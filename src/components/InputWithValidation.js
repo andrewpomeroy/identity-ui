@@ -48,7 +48,8 @@ const InputWithValidation = (props) => {
 
   const controlLabelProps = {
     isError: isError,
-    htmlFor: id
+    id: `${id}-label`,
+    htmlFor: `${id}-control`
   }
 
   const ControlLabel = props.labelComponent ?
@@ -66,7 +67,7 @@ const InputWithValidation = (props) => {
   }
  
   const getStandardControlProps = (controlProps) => ({
-    id,
+    id: `${id}-control`,
     onChange: props.onChange,
     onBlur: props.onBlur,
     name: props.name,
@@ -74,7 +75,9 @@ const InputWithValidation = (props) => {
     // value: inputValue,
     isError,
     onKeyDown: handleKeyDown,
-    type: controlProps.type || 'text'
+    type: controlProps.type || 'text',
+    "aria-describedby": `${controlProps.ariaDescribedBy} ${id}-messages`,
+    "aria-invalid": !!isError
   });
 
   const Control = React.cloneElement(props.control, {...getStandardControlProps(props.control.props)})
@@ -83,7 +86,12 @@ const InputWithValidation = (props) => {
     <InputContainer>
       {ControlLabel}
       {Control}
-      <ValidationMessages isError={isError}>
+      <ValidationMessages 
+        id={`${id}-messages`}
+        isError={!!isError}
+        aria-required=""
+        aria-live="assertive"
+        aria-relevant="additions removals">
         {(!messages || !messages.length) && 
           <ValidationMessagePlaceholder />
         }

@@ -172,7 +172,7 @@ function EntryView() {
                 actions.setSubmitting(false);
               }, 500);
             }}
-            render={({ handleSubmit, handleChange, handleBlur, setValues, setTouched, values, errors, touched }) => (
+            render={({ handleSubmit, handleChange, handleBlur, setValues, setTouched, isSubmitting, values, errors, touched }) => (
             <React.Fragment>
               <form onSubmit={handleSubmit}>
                 <AppBrandWithSubhead large />
