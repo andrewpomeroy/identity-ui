@@ -23,7 +23,10 @@ export const Button = styled.button`
   ${fontWeight}
   ${buttonSpacing}
   cursor: pointer;
-  transition: background-color ${buttonStyles.transitionDuration}ms linear;
+  transition: background-color ${buttonStyles.transitionDuration}ms linear, transform ${buttonStyles.transitionDuration * 2}ms ease;
+  &:active {
+    transform: scale(.98);
+  }
   &:focus {
     outline: 0;
   }
