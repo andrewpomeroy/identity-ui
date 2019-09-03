@@ -21,7 +21,7 @@ import ButtonLoaderShell from './components/ButtonLoaderShell';
 
 const LoginSchema = Yup.object().shape({
   email: Yup.string()
-    .email("Must be a valid email address")
+    // .email("Must be a valid email address")
     .required('Required'),
   password: Yup.string()
     .required('Required')
@@ -172,7 +172,7 @@ function EntryView() {
                 actions.setSubmitting(false);
               }, 1000);
             }}
-            render={({ handleSubmit, handleChange, handleBlur, setValues, setTouched, isSubmitting, values, errors, touched }) => (
+            render={({ handleSubmit, handleChange, handleBlur, setTouched, setFieldValue, isSubmitting, values, errors, touched }) => (
             <React.Fragment>
               <form onSubmit={handleSubmit}>
                 <AppBrandWithSubhead large />
@@ -238,8 +238,8 @@ function EntryView() {
                         page={1}
                         transitionDirection={transitionDirection}
                         onPoseComplete={() => {
-                          setPasswordAutofocus(true)}
-                        }
+                          setPasswordAutofocus(true)
+                        }}
                         currentPage={currentPage}>
                         <FlexContainer flexDirection="column" justifyContent="flex-end" style={{height: getComputedLineHeight('h4') * 2}}>
                           <FlexItem auto>
@@ -247,9 +247,13 @@ function EntryView() {
                               <FlexItem auto>
                                 <GhostIconButton
                                   onClick={() => {
-                                    setValues({...values, password: ''});
                                     setTouched({...touched, password: false});
-                                    pagerDispatch({type: 'decrement'})
+                                    setFieldValue('password', '')
+                                    // Prevent some weirdness with setFieldValue being async, trying to transition while changing values
+                                    // Not a *real* solution. Still an open issue: https://github.com/jaredpalmer/formik/issues/529
+                                    setTimeout(() => {
+                                      pagerDispatch({type: 'decrement'})
+                                    }, 0);
                                   }}
                                   size={`${getComputedLineHeight('h5')}px`}
                                   icon={<Arrow direction="left"></Arrow>} />
