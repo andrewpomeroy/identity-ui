@@ -1,61 +1,50 @@
 import {
-  style,
+  get,
+  system,
   compose,
-  getPx,
-  mapProps
+  // getPx,
+  // mapProps
 } from "styled-system";
 
-export const buttonSpacingLeft = style({
-  prop: "paddingLeft",
-  key: "buttonSpacingH",
-  alias: "buttonSpacingLeft",
-  transformValue: getPx,
-});
+const config = {
+  buttonSpacingLeft: {
+    property: "paddingLeft",
+    // key: "buttonSpacingH",
+    // alias: "buttonSpacingLeft",
+    scale: 'buttonSpacing'
+    // transformValue: getPx,
+  },
+  buttonSpacingRight: {
+    property: "paddingRight",
+    // key: "buttonSpacingH",
+    // alias: "buttonSpacingRight",
+    scale: 'buttonSpacing'
+    // transformValue: getPx
+  },
 
-export const buttonSpacingRight = style({
-  prop: "paddingRight",
-  key: "buttonSpacingH",
-  alias: "buttonSpacingRight",
-  transformValue: getPx
-});
+  buttonSpacingTop: {
+    property: "paddingTop",
+    // key: "buttonSpacingV",
+    // alias: "buttonSpacingTop",
+    scale: 'buttonSpacing'
+    // transformValue: getPx,
+  },
 
-export const buttonSpacingTop = style({
-  prop: "paddingTop",
-  key: "buttonSpacingV",
-  alias: "buttonSpacingTop",
-  transformValue: getPx,
-});
+  buttonSpacingBottom: {
+    property: "paddingBottom",
+    // key: "buttonSpacingV",
+    // alias: "buttonSpacingBottom",
+    scale: 'buttonSpacing'
+    // transformValue: getPx
+  },
+  buttonSpacingH: {
+    properties: ["paddingLeft, paddingRight"],
+    scale: "buttonSpacing"
+  },
+  buttonSpacingV: {
+    properties: ["paddingTop, paddingBottom"],
+    scale: "buttonSpacing"
+  }
+}
 
-export const buttonSpacingBottom = style({
-  prop: "paddingBottom",
-  key: "buttonSpacingV",
-  alias: "buttonSpacingBottom",
-  transformValue: getPx
-});
-
-export const buttonSpacingH = mapProps(props => ({
-  ...props,
-  buttonSpacingLeft: props.buttonSpacingH || props.buttonSpacing,
-  buttonSpacingRight: props.buttonSpacingH || props.buttonSpacing
-}))(
-  compose(
-    buttonSpacingLeft,
-    buttonSpacingRight
-  )
-)
-
-export const buttonSpacingV = mapProps(props => ({
-  ...props,
-  buttonSpacingTop: props.buttonSpacingV || props.buttonSpacing,
-  buttonSpacingBottom: props.buttonSpacingV || props.buttonSpacing,
-}))(
-  compose(
-    buttonSpacingTop,
-    buttonSpacingBottom
-  )
-)
-
-export const buttonSpacing = compose(
-  buttonSpacingH,
-  buttonSpacingV
-)
+export const buttonSpacing = system(config)

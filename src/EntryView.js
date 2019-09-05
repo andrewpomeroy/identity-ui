@@ -283,7 +283,8 @@ function EntryView() {
                         <ModalBlockSpacer size="default" />
                         <FlexContainer justifyContent="flex-end">
                           <FlexItem auto>
-                            <PrimaryButton buttonSpacing={3} type="submit">
+                            <PrimaryButton
+                              buttonSpacing={3} buttonSpacing={3} type="submit" isDisabled={isSubmitting || !values.password}>
                               <ButtonLoaderShell isLoading={isSubmitting} disabled={isSubmitting}>
                                 <FlexContainer alignItems="center">
                                   <SplitWithChildMargin gutter={spacing[0]}>

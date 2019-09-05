@@ -11,7 +11,7 @@ const buttonStyles = {
   transitionDuration: 50,
 }
 
-export const Button = styled.button`
+const StyledButton = styled.button`
   position: relative;
   color: inherit;
   border: 0;
@@ -22,7 +22,6 @@ export const Button = styled.button`
   ${fontSize}
   ${fontWeight}
   ${buttonSpacing}
-  cursor: pointer;
   transition: background-color ${buttonStyles.transitionDuration}ms linear, transform ${buttonStyles.transitionDuration * 2}ms ease;
   &:active {
     transform: scale(.98);
@@ -30,9 +29,21 @@ export const Button = styled.button`
   &:focus {
     outline: 0;
   }
-`;
-Button.defaultProps = {
-  type: 'button'
+  &[disabled] {
+    opacity: .4;
+  }
+  &:not([disabled]) {
+    cursor: pointer;
+  }
+`
+const Button = ({isDisabled, children, ...props}) => {
+  return (
+    <StyledButton
+      type="button"
+      disabled={isDisabled}
+      {...props}>
+      {children}
+    </StyledButton>)
 }
 
 const GhostButtonStyles = `
@@ -77,11 +88,13 @@ export const PrimaryButton = styled(Button)`
   background-color: ${colorMap.primary};
   color: ${colors.white};
   font-weight: 500;
-  &:hover, &:focus {
-    background-color: ${Color(colorMap.primary).lighten(.05).string()};
-  }
-  &:active {
-    background-color: ${Color(colorMap.primary).darken(.1).string()};
+  &:not([disabled]) {
+    &:hover, &:focus {
+      background-color: ${Color(colorMap.primary).lighten(.05).string()};
+    }
+    &:active {
+      background-color: ${Color(colorMap.primary).darken(.1).string()};
+    }
   }
 `
 

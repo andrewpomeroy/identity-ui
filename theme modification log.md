@@ -7,6 +7,7 @@
 * add getComputedLineHeight to commonType
 * fix flexbox style functions in flexContainer in commonLayout
 * extend theme with mappedTheme
+* update styled-system, overhaul buttonSpacing to fit new API
 
 ### Colors
 
@@ -25,6 +26,8 @@
 * make Button position: relative;
 * Move away from styled-system stuff in favor of button style composition
 * add slight bounce on click
+* Add basic decorated-button pattern, with disabled styles and such
+
 
 ## from personal library
 ### Spotmark
