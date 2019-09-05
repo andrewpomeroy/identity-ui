@@ -222,7 +222,7 @@ function EntryView() {
                                   <SplitWithChildMargin gutter={8}>
                                     <FlexItem>Next</FlexItem>
                                     <FlexItem auto style={{marginTop: -5, marginBottom: -5}}>
-                                      <Arrow></Arrow>
+                                      <Arrow size={20}></Arrow>
                                     </FlexItem>
                                   </SplitWithChildMargin>
                                 </FlexContainer>
