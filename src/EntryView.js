@@ -166,21 +166,25 @@ const EntryView = () => {
       case undefined:
         break;
       case null: 
+        // console.log("usernamePromptDispatch({type: 'RESET'});");  
         usernamePromptDispatch({type: 'RESET'});
         break;
       case true: 
+          // console.log("usernamePromptDispatch({type: 'LOOKUP_SUCCESS', payload: result});");  
         usernamePromptDispatch({type: 'LOOKUP_SUCCESS', payload: result});
         break;
       case false:
+        // console.log("usernamePromptDispatch({type: 'LOOKUP_FAILURE'})");  
         usernamePromptDispatch({type: 'LOOKUP_FAILURE'})
         break;
       default: 
+        // console.log("usernamePromptDispatch({type: 'INIT'});");  
         usernamePromptDispatch({type: "INIT"});
     }
   }, [usernameQueryResult])
   useEffect(() => {
     const status = usernamePrompt.queryStatus;
-    console.log("status", status);
+    console.log("queryStatus changed to:", status);
     if (status === 'SUCCESS') onUsernameQuerySuccess.current();
     // Refresh autofocus on the Username field
     if (status === 'FAILURE') setUsernameAutofocus(uuid());
@@ -267,8 +271,9 @@ const EntryView = () => {
                               {/* TODO: Replace this with an icon-button pattern */}
                               <PrimaryButton
                                 buttonSpacing={3}
-                                onClick={submitUsername}>
-                                <ButtonLoaderShell>
+                                onClick={submitUsername}
+                                isDisabled={!values.email || errors.email || usernamePrompt.queryStatus === "LOADING" || usernamePrompt.}>
+                                <ButtonLoaderShell isLoading={usernamePrompt.queryStatus === "LOADING"}>
                                   <FlexContainer alignItems="center">
                                     <SplitWithChildMargin gutter={8}>
                                       <FlexItem>Next</FlexItem>
