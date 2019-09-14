@@ -102,7 +102,6 @@ const usernamePromptReducer = (state, action) => {
     case 'LOOKUP_ATTEMPT':
       console.log('lookup attempt');
       return {
-        
         ...state,
         queryStatus: 'LOADING',
         queryString: action.payload,
@@ -119,7 +118,9 @@ const usernamePromptReducer = (state, action) => {
       return {
         ...state,
         queryStatus: 'FAILURE',
-        results: undefined
+        queryString: null,
+        results: undefined,
+        attemptedQueryString: state.queryString
       }
     default:
       throw new Error();
@@ -338,7 +339,7 @@ const EntryView = () => {
               {usernamePrompt.queryStatus === 'FAILURE' && 
                 <>
                   <ModalBlockSpacer size="small" />
-                  <Alert>Sorry, <strong>{usernamePrompt.queryString}</strong> is not a valid username.</Alert>
+                  <Alert>Sorry, <strong>{usernamePrompt.attemptedQueryString}</strong> is not a valid username.</Alert>
                 </>
               }
             </React.Fragment>
