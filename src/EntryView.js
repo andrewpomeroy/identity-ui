@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef, useReducer } from 'react';
 import { Formik } from 'formik';
 import landingBG from './clientAssets/landing-bg.jpg';
 import styled from '@emotion/styled/macro';
@@ -17,6 +17,7 @@ import * as Yup from 'yup';
 import uuid from 'uuid4';
 import ButtonLoaderShell from './components/ButtonLoaderShell';
 import Pager, { Page } from './components/Pager';
+import useDataApi from './hooks/useDataApi';
 
 const LoginSchema = Yup.object().shape({
   email: Yup.string()
@@ -71,9 +72,90 @@ const ModalBlockTitleSmall = styled(ModalBlockTitle)`
   text-overflow: ellipsis;
   overflow: hidden;
 `
+const usernamePromptInitialState = {
+  // enteredUsername: undefined,
+  queryStatus: undefined,
+  queryString: undefined,
+  results: undefined
+}
+const usernamePromptReducer = (state, action) => {
+  switch (action.type) {
+    case 'INIT': 
+      return {
+        ...usernamePromptInitialState
+      }
+    case 'RESET': 
+      return {
+        ...usernamePromptInitialState,
+      }
+    case 'LOOKUP_ATTEMPT':
+      return {
+        ...state,
+        queryStatus: 'LOADING',
+        queryString: action.payload,
+      }
+    case 'LOOKUP_SUCCESS': 
+      return {
+        queryStatus: 'SUCCESS',
+        queryString: undefined,
+        results: action.payload,
+      }
+    case 'LOOKUP_FAILURE': 
+      return {
+        ...state,
+        queryStatus: 'FAILURE',
+        results: undefined
+      }
+    default:
+      throw new Error();
+  }
+}
 
-function EntryView() {
+const EntryView = () => {
+  const [usernameAutofocus, setUsernameAutofocus] = useState(true);
   const [passwordAutofocus, setPasswordAutofocus] = useState(false);
+  const [usernamePrompt, usernamePromptDispatch] = useReducer(usernamePromptReducer, usernamePromptInitialState);
+  const [{ data: usernameQueryResult, isLoading, isError }, doFetch] = useDataApi(
+    null, // url
+    null, // initial result state
+  );
+  // The on-success function needs to be redefined later, since it will need to contain references not instantiated yet — things provided by the Formik render function, so we just re-define when we render to that depth of the component tree.
+  const onUsernameQuerySuccess = useRef();
+
+  // Username validity fetching
+  useEffect(() => {
+    const query = usernamePrompt.queryString;
+    console.log('maybe querying', query);
+    if (query && query.length) {
+      doFetch(`https://hn.algolia.com/api/v1/search?query=${query}`)
+    }
+    // Gotta clear the fetch hook's pipeline in case the user wants to make the same query again
+    else doFetch(null);
+  }, [doFetch, usernamePrompt.queryString]);
+  useEffect(() => {
+    if (isError) {
+      console.log("isError", isError);
+      usernamePromptDispatch({type: 'LOOKUP_FAILURE'})
+    }
+  }, [isError])
+
+  // Processing Username-prompt specific states
+  useEffect(() => {
+    console.log("usernameQueryResult", usernameQueryResult);
+    if (!usernameQueryResult) return;
+    if (usernameQueryResult && usernameQueryResult.hits && usernameQueryResult.hits.length) {
+      usernamePromptDispatch({type: 'LOOKUP_SUCCESS', payload: usernameQueryResult.hits})
+    }
+    else usernamePromptDispatch({type: 'LOOKUP_FAILURE'})
+  }, [usernameQueryResult])
+  useEffect(() => {
+    const status = usernamePrompt.queryStatus;
+    console.log("status", status);
+    if (status === 'SUCCESS') onUsernameQuerySuccess.current();
+    // Refresh autofocus on the Username field
+    if (status === 'FAILURE') setUsernameAutofocus(uuid());
+  }, [usernamePrompt.queryStatus])
+  
   return (
     <LandingBackground>
       <CenterContainer>
@@ -93,125 +175,138 @@ function EntryView() {
               <form onSubmit={handleSubmit}>
                 <AppBrandWithSubhead large />
                 <ModalBlockSpacer size="small" />
-                <Pager>{({currentPage, transitionDirection}, pagerDispatch) => 
-                  <React.Fragment key="nothing">
-                    <Page
-                      key={0}
-                      page={0}
-                      transitionDirection={transitionDirection}
-                      currentPage={currentPage}>
-                      <ModalBlockTitle as="div">&nbsp;</ModalBlockTitle>
-                      <ModalBlockTitle as="h2">Sign in to your account</ModalBlockTitle>
-                      <ModalBlockSpacer size="small" />
-                      <InputWithValidation 
-                        label="Email Address" 
-                        name="email" 
-                        onEnterKey={() => {
-                            setPasswordAutofocus(false);
-                            values.email && !errors.email && pagerDispatch({type: 'increment'});
-                            setTouched({...touched, email: true});
-                        }}
-                        onChange={handleChange} 
-                        onBlur={handleBlur} 
-                        values={values} 
-                        errors={errors}
-                        touched={touched}
-                        control={
-                          <Input autoComplete={uuid()} willAutoFocus={true} />
-                        } />
-                      <ModalBlockSpacer size="default" />
-                      <FlexContainer justifyContent="flex-end">
-                        <FlexItem auto>
-                          {/* TODO: Replace this with an icon-button pattern */}
-                          <PrimaryButton
-                            buttonSpacing={3}
-                            onClick={() => {
-                              setPasswordAutofocus(false);
-                              values.email && !errors.email && pagerDispatch({type: 'increment'});
-                              setTouched({...touched, email: true});
-                            }}>
-                            <ButtonLoaderShell>
-                              <FlexContainer alignItems="center">
-                                <SplitWithChildMargin gutter={8}>
-                                  <FlexItem>Next</FlexItem>
-                                  <FlexItem auto style={{marginTop: -5, marginBottom: -5}}>
-                                    <Arrow size={20}></Arrow>
-                                  </FlexItem>
-                                </SplitWithChildMargin>
-                              </FlexContainer>
-                            </ButtonLoaderShell>
-                          </PrimaryButton>
-                      </FlexItem>
-                      </FlexContainer>
-                    </Page>
-                    <Page
-                      key={1}
-                      page={1}
-                      transitionDirection={transitionDirection}
-                      onPoseComplete={() => {
-                        setPasswordAutofocus(true)
-                      }}
-                      currentPage={currentPage}>
-                      <FlexContainer flexDirection="column" justifyContent="flex-end" style={{height: getComputedLineHeight('h4') * 2}}>
-                        <FlexItem auto>
-                          <SplitWithChildMargin gutter={8}>
+                  <Pager>{({currentPage, transitionDirection}, pagerDispatch) => {
+                    const submitUsername = () => {
+                      if (values.email && values.email.length) {
+                        usernamePromptDispatch({
+                          type: 'LOOKUP_ATTEMPT',
+                          payload: values.email
+                        })
+                      }
+                      // if (values.email && values.email.length) setUsernameQuery(values.email);
+                    };
+                    onUsernameQuerySuccess.current = () => {
+                      // setUsernameQuery(undefined);
+                      usernamePromptDispatch({type: 'LOOKUP_SUCCESS'});
+                      setPasswordAutofocus(false);
+                      values.email && !errors.email && pagerDispatch({type: 'increment'});
+                      setTouched({...touched, email: true});
+                    }
+                    const backToUsernameEntry = () => {
+                      usernamePromptDispatch({type: 'RESET'});
+                      setTouched({...touched, password: false});
+                      setFieldValue('password', '')
+                      // Prevent some weirdness with setFieldValue being async, trying to transition while changing values
+                      // Not a *real* solution. Still an open issue: https://github.com/jaredpalmer/formik/issues/529
+                      setTimeout(() => {
+                        pagerDispatch({type: 'decrement'})
+                      }, 0);
+                    };
+
+                    return (
+                      <React.Fragment>
+                        <Page
+                          key={0}
+                          page={0}
+                          transitionDirection={transitionDirection}
+                          currentPage={currentPage}>
+                          <ModalBlockTitle as="div">&nbsp;</ModalBlockTitle>
+                          <ModalBlockTitle as="h2">Sign in to your account</ModalBlockTitle>
+                          <ModalBlockSpacer size="small" />
+                          <InputWithValidation 
+                            label="Email Address" 
+                            name="email" 
+                            onEnterKey={submitUsername}
+                            onChange={handleChange} 
+                            onBlur={handleBlur} 
+                            values={values} 
+                            errors={errors}
+                            touched={touched}
+                            control={
+                              <Input autoComplete={uuid()} willAutoFocus={usernameAutofocus} />
+                            } />
+                          <ModalBlockSpacer size="default" />
+                          <FlexContainer justifyContent="flex-end">
                             <FlexItem auto>
-                              <GhostIconButton
-                                onClick={() => {
-                                  setTouched({...touched, password: false});
-                                  setFieldValue('password', '')
-                                  // Prevent some weirdness with setFieldValue being async, trying to transition while changing values
-                                  // Not a *real* solution. Still an open issue: https://github.com/jaredpalmer/formik/issues/529
-                                  setTimeout(() => {
-                                    pagerDispatch({type: 'decrement'})
-                                  }, 0);
-                                }}
-                                size={`${getComputedLineHeight('h5')}px`}
-                                icon={<Arrow direction="left"></Arrow>} />
+                              {/* TODO: Replace this with an icon-button pattern */}
+                              <PrimaryButton
+                                buttonSpacing={3}
+                                onClick={submitUsername}>
+                                <ButtonLoaderShell>
+                                  <FlexContainer alignItems="center">
+                                    <SplitWithChildMargin gutter={8}>
+                                      <FlexItem>Next</FlexItem>
+                                      <FlexItem auto style={{marginTop: -5, marginBottom: -5}}>
+                                        <Arrow size={20}></Arrow>
+                                      </FlexItem>
+                                    </SplitWithChildMargin>
+                                  </FlexContainer>
+                                </ButtonLoaderShell>
+                              </PrimaryButton>
+                          </FlexItem>
+                          </FlexContainer>
+                        </Page>
+                        <Page
+                          key={1}
+                          page={1}
+                          transitionDirection={transitionDirection}
+                          onPoseComplete={() => {
+                            setPasswordAutofocus(true)
+                          }}
+                          currentPage={currentPage}>
+                          <FlexContainer flexDirection="column" justifyContent="flex-end" style={{height: getComputedLineHeight('h4') * 2}}>
+                            <FlexItem auto>
+                              <SplitWithChildMargin gutter={8}>
+                                <FlexItem auto>
+                                  <GhostIconButton
+                                    onClick={backToUsernameEntry}
+                                    size={`${getComputedLineHeight('h5')}px`}
+                                    icon={<Arrow direction="left"></Arrow>} />
+                                </FlexItem>
+                                <FlexItem>
+                                  <UnstyledHeading as="h2">
+                                    <ModalBlockTitleSmall as="div">Signing in as</ModalBlockTitleSmall>
+                                    <ModalBlockTitleSmall as="div" title="{values.email}"><strong>{values.email}</strong></ModalBlockTitleSmall>
+                                  </UnstyledHeading>
+                                </FlexItem>
+                              </SplitWithChildMargin>
                             </FlexItem>
-                            <FlexItem>
-                              <UnstyledHeading as="h2">
-                                <ModalBlockTitleSmall as="div">Signing in as</ModalBlockTitleSmall>
-                                <ModalBlockTitleSmall as="div" title="{values.email}"><strong>{values.email}</strong></ModalBlockTitleSmall>
-                              </UnstyledHeading>
+                          </FlexContainer>
+                          <ModalBlockSpacer size="small" />
+                          <InputWithValidation
+                            label="Password"
+                            name="password"
+                            allowEnterKey={true}
+                            onChange={handleChange} 
+                            onBlur={handleBlur} 
+                            values={values} 
+                            errors={errors}
+                            touched={touched}
+                            control={
+                              <Input type="password" autoComplete={uuid()} willAutoFocus={passwordAutofocus}/>
+                            } />
+                          <ModalBlockSpacer size="default" />
+                          <FlexContainer justifyContent="flex-end">
+                            <FlexItem auto>
+                              <PrimaryButton
+                                buttonSpacing={3} type="submit" isDisabled={isSubmitting || !values.password}>
+                                <ButtonLoaderShell isLoading={isSubmitting} disabled={isSubmitting}>
+                                  <FlexContainer alignItems="center">
+                                    <SplitWithChildMargin gutter={spacing[0]}>
+                                      <FlexItem>Sign In</FlexItem>
+                                    </SplitWithChildMargin>
+                                  </FlexContainer>
+                                </ButtonLoaderShell>
+                              </PrimaryButton>
                             </FlexItem>
-                          </SplitWithChildMargin>
-                        </FlexItem>
-                      </FlexContainer>
-                      <ModalBlockSpacer size="small" />
-                      <InputWithValidation
-                        label="Password"
-                        name="password"
-                        allowEnterKey={true}
-                        onChange={handleChange} 
-                        onBlur={handleBlur} 
-                        values={values} 
-                        errors={errors}
-                        touched={touched}
-                        control={
-                          <Input type="password" autoComplete={uuid()} willAutoFocus={passwordAutofocus}/>
-                        } />
-                      <ModalBlockSpacer size="default" />
-                      <FlexContainer justifyContent="flex-end">
-                        <FlexItem auto>
-                          <PrimaryButton
-                            buttonSpacing={3} buttonSpacing={3} type="submit" isDisabled={isSubmitting || !values.password}>
-                            <ButtonLoaderShell isLoading={isSubmitting} disabled={isSubmitting}>
-                              <FlexContainer alignItems="center">
-                                <SplitWithChildMargin gutter={spacing[0]}>
-                                  <FlexItem>Sign In</FlexItem>
-                                </SplitWithChildMargin>
-                              </FlexContainer>
-                            </ButtonLoaderShell>
-                          </PrimaryButton>
-                      </FlexItem>
-                      </FlexContainer>
-                    </Page>
-                  </React.Fragment>
-                }</Pager>
+                          </FlexContainer>
+                        </Page>
+                      </React.Fragment>
+                    )}
+                  }
+                </Pager>
               </form>
-              {/* <pre>{JSON.stringify(errors, '\t')}</pre>
-              <pre>{JSON.stringify(touched, '\t')}</pre> */}
+              {usernamePrompt.queryStatus === 'FAILURE' && <strong>OH NOES <em>{usernamePrompt.queryString}</em> was bad</strong>}
             </React.Fragment>
           )} />
         </ModalBlock>
