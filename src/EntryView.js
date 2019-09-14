@@ -255,7 +255,13 @@ const EntryView = () => {
                             control={
                               <Input autoComplete={uuid()} willAutoFocus={usernameAutofocus} />
                             } />
-                          <ModalBlockSpacer size="default" />
+                          {usernamePrompt.queryStatus === 'FAILURE' ?
+                            <>
+                              <Alert>Sorry, <strong>{usernamePrompt.attemptedQueryString}</strong> is not a valid username.</Alert>
+                              <ModalBlockSpacer size="small" />
+                            </>
+                            : <ModalBlockSpacer size="default" />
+                          }
                           <FlexContainer justifyContent="flex-end">
                             <FlexItem auto>
                               {/* TODO: Replace this with an icon-button pattern */}
@@ -336,12 +342,6 @@ const EntryView = () => {
                   }
                 </Pager>
               </form>
-              {usernamePrompt.queryStatus === 'FAILURE' && 
-                <>
-                  <ModalBlockSpacer size="small" />
-                  <Alert>Sorry, <strong>{usernamePrompt.attemptedQueryString}</strong> is not a valid username.</Alert>
-                </>
-              }
             </React.Fragment>
           )} />
         </ModalBlock>
