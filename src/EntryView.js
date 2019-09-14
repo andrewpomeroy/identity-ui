@@ -9,7 +9,7 @@ import { Heading4, UnstyledHeading, getComputedLineHeight } from './theme/common
 import Input from './components/Input';
 import { FlexContainer, FlexItem } from './components/commonLayout';
 import SplitWithChildMargin from './components/SplitWithChildMargin';
-import { spacing } from './theme/theme';
+import { spacing, colors } from './theme/theme';
 import { typeScaleMap } from './theme/themeMapping';
 import { Arrow } from './components/ArrowComponents';
 import InputWithValidation from './components/InputWithValidation';
@@ -18,6 +18,7 @@ import uuid from 'uuid4';
 import ButtonLoaderShell from './components/ButtonLoaderShell';
 import Pager, { Page } from './components/Pager';
 import useDataApi from './hooks/useDataApi';
+import { validateUsername } from './services/mockAuthServices';
 
 const LoginSchema = Yup.object().shape({
   email: Yup.string()
@@ -72,6 +73,14 @@ const ModalBlockTitleSmall = styled(ModalBlockTitle)`
   text-overflow: ellipsis;
   overflow: hidden;
 `
+
+const Alert = styled.div`
+  background-color: ${colors.red};
+  color: ${colors.white};
+  padding: 1em;
+  border-radius: 5px;
+`
+
 const usernamePromptInitialState = {
   // enteredUsername: undefined,
   queryStatus: undefined,
@@ -81,26 +90,32 @@ const usernamePromptInitialState = {
 const usernamePromptReducer = (state, action) => {
   switch (action.type) {
     case 'INIT': 
+      console.log('INIT');
       return {
         ...usernamePromptInitialState
       }
     case 'RESET': 
+      console.log('RESET');
       return {
         ...usernamePromptInitialState,
       }
     case 'LOOKUP_ATTEMPT':
+      console.log('lookup attempt');
       return {
+        
         ...state,
         queryStatus: 'LOADING',
         queryString: action.payload,
       }
     case 'LOOKUP_SUCCESS': 
+      console.log('lookup success');
       return {
         queryStatus: 'SUCCESS',
-        queryString: undefined,
+        queryString: null,
         results: action.payload,
       }
     case 'LOOKUP_FAILURE': 
+    console.log('lookup failure');
       return {
         ...state,
         queryStatus: 'FAILURE',
@@ -117,20 +132,22 @@ const EntryView = () => {
   const [usernamePrompt, usernamePromptDispatch] = useReducer(usernamePromptReducer, usernamePromptInitialState);
   const [{ data: usernameQueryResult, isLoading, isError }, doFetch] = useDataApi(
     null, // url
-    null, // initial result state
+    undefined, // initial result state
   );
   // The on-success function needs to be redefined later, since it will need to contain references not instantiated yet — things provided by the Formik render function, so we just re-define when we render to that depth of the component tree.
   const onUsernameQuerySuccess = useRef();
 
-  // Username validity fetching
+  // Username validity testing
   useEffect(() => {
     const query = usernamePrompt.queryString;
     console.log('maybe querying', query);
     if (query && query.length) {
-      doFetch(`https://hn.algolia.com/api/v1/search?query=${query}`)
+      doFetch(() => validateUsername(query));
+      // doFetch(`https://hn.algolia.com/api/v1/search?query=${query}`)
     }
     // Gotta clear the fetch hook's pipeline in case the user wants to make the same query again
-    else doFetch(null);
+    // Pass through null (clear) or undefined (init)
+    else doFetch(query);
   }, [doFetch, usernamePrompt.queryString]);
   useEffect(() => {
     if (isError) {
@@ -142,11 +159,23 @@ const EntryView = () => {
   // Processing Username-prompt specific states
   useEffect(() => {
     console.log("usernameQueryResult", usernameQueryResult);
-    if (!usernameQueryResult) return;
-    if (usernameQueryResult && usernameQueryResult.hits && usernameQueryResult.hits.length) {
-      usernamePromptDispatch({type: 'LOOKUP_SUCCESS', payload: usernameQueryResult.hits})
+    // null should clear the pipeline, for re-init/reset states
+    const result = usernameQueryResult == null ? usernameQueryResult : usernameQueryResult.data;
+    switch (result) {
+      case undefined:
+        break;
+      case null: 
+        usernamePromptDispatch({type: 'RESET'});
+        break;
+      case true: 
+        usernamePromptDispatch({type: 'LOOKUP_SUCCESS', payload: result});
+        break;
+      case false:
+        usernamePromptDispatch({type: 'LOOKUP_FAILURE'})
+        break;
+      default: 
+        usernamePromptDispatch({type: "INIT"});
     }
-    else usernamePromptDispatch({type: 'LOOKUP_FAILURE'})
   }, [usernameQueryResult])
   useEffect(() => {
     const status = usernamePrompt.queryStatus;
@@ -306,7 +335,12 @@ const EntryView = () => {
                   }
                 </Pager>
               </form>
-              {usernamePrompt.queryStatus === 'FAILURE' && <strong>OH NOES <em>{usernamePrompt.queryString}</em> was bad</strong>}
+              {usernamePrompt.queryStatus === 'FAILURE' && 
+                <>
+                  <ModalBlockSpacer size="small" />
+                  <Alert>Sorry, <strong>{usernamePrompt.queryString}</strong> is not a valid username.</Alert>
+                </>
+              }
             </React.Fragment>
           )} />
         </ModalBlock>

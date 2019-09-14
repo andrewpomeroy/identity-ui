@@ -1,5 +1,6 @@
 import { useState, useReducer, useEffect } from 'react';
 import axios from 'axios';
+import uuid from 'uuid4';
 
 const dataFetchReducer = (state, action) => {
   switch (action.type) {
@@ -31,28 +32,40 @@ const dataFetchReducer = (state, action) => {
   }
 };
 
-const useDataApi = (initialUrl, initialData) => {
-  const [url, setUrl] = useState(initialUrl);
+const useDataApi = (initialEndpoint, initialData) => {
+  const [endpoint, setEndpoint] = useState(initialEndpoint);
   const [state, dispatch] = useReducer(dataFetchReducer, {
     isLoading: false,
     isError: false,
     data: initialData,
   });
   useEffect(() => {
-    if (url) {
-      console.log("doing query with", url);
+    if (endpoint) {
+      console.log("doing query with", endpoint);
       let didCancel = false;
       const fetchData = async () => {
         dispatch({ type: 'FETCH_INIT' });
         try {
-          const result = await axios(url);
+          let result;
+          if (typeof endpoint === 'string') {
+            result = await axios(endpoint);
+          }
+          else {
+            result = await endpoint;
+          }
           if (!didCancel) {
-            dispatch({ type: 'FETCH_SUCCESS', payload: result.data });
+            dispatch({ type: 'FETCH_SUCCESS', payload: {
+              data: result.data,
+              key: uuid()
+            }});
           }
         } catch (error) {
           if (!didCancel) {
-            console.log(error);
-            dispatch({ type: 'FETCH_FAILURE', payload: error });
+            console.error(error);
+            dispatch({ type: 'FETCH_FAILURE', payload: {
+              error: error,
+              key: uuid()
+            }});
           }
         }
       };
@@ -61,8 +74,8 @@ const useDataApi = (initialUrl, initialData) => {
         didCancel = true;
       };
     }
-  }, [url]);
-  return [state, setUrl];
+  }, [endpoint]);
+  return [state, setEndpoint];
 };
 
 export default useDataApi;
