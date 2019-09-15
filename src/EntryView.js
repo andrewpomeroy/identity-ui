@@ -19,6 +19,8 @@ import ButtonLoaderShell from './components/ButtonLoaderShell';
 import Pager, { Page } from './components/Pager';
 import useDataApi from './hooks/useDataApi';
 import { validateUsername } from './services/mockAuthServices';
+import useValidationResponseHandler from './hooks/useValidationResponseHandler';
+import Alert from './components/Alert';
 
 const LoginSchema = Yup.object().shape({
   email: Yup.string()
@@ -51,47 +53,35 @@ const CenterContainer = styled.div`
   justify-content: center;
 `
 
-const Alert = styled.div`
-  background-color: ${colors.red};
-  color: ${colors.white};
-  padding: 1em;
-  border-radius: 5px;
-`
-
 const usernamePromptInitialState = {
   // enteredUsername: undefined,
   queryStatus: undefined,
   queryString: undefined,
-  results: undefined
+  results: undefined,
+  attemptedQueryString: undefined
 }
 const usernamePromptReducer = (state, action) => {
+  console.log("usernamePromptReducer", action.type, action.payload);
   switch (action.type) {
     case 'INIT': 
-      console.log('INIT');
+    case 'RESET': 
       return {
         ...usernamePromptInitialState
       }
-    case 'RESET': 
-      console.log('RESET');
-      return {
-        ...usernamePromptInitialState,
-      }
-    case 'LOOKUP_ATTEMPT':
-      console.log('lookup attempt');
+    case 'VALIDATE_ATTEMPT':
       return {
         ...state,
         queryStatus: 'LOADING',
         queryString: action.payload,
+        attemptedQueryString: null
       }
-    case 'LOOKUP_SUCCESS': 
-      console.log('lookup success');
+    case 'VALIDATE_SUCCESS': 
       return {
         queryStatus: 'SUCCESS',
         queryString: null,
         results: action.payload,
       }
-    case 'LOOKUP_FAILURE': 
-    console.log('lookup failure');
+    case 'VALIDATE_FAILURE': 
       return {
         ...state,
         queryStatus: 'FAILURE',
@@ -109,9 +99,10 @@ const EntryView = () => {
   const [passwordAutofocus, setPasswordAutofocus] = useState(false);
   const [usernamePrompt, usernamePromptDispatch] = useReducer(usernamePromptReducer, usernamePromptInitialState);
   const [{ data: usernameQueryResult, isLoading, isError }, doFetch] = useDataApi(
-    null, // url
+    undefined, // url
     undefined, // initial result state
   );
+  useValidationResponseHandler(usernameQueryResult, usernamePromptDispatch)
   // The on-success function needs to be redefined later, since it will need to contain references not instantiated yet — things provided by the Formik render function, so we just re-define when we render to that depth of the component tree.
   const onUsernameQuerySuccess = useRef();
 
@@ -130,35 +121,11 @@ const EntryView = () => {
   useEffect(() => {
     if (isError) {
       console.log("isError", isError);
-      usernamePromptDispatch({type: 'LOOKUP_FAILURE'})
+      usernamePromptDispatch({type: 'VALIDATE_FAILURE'})
     }
   }, [isError])
 
-  // Processing Username-prompt specific states
-  useEffect(() => {
-    console.log("usernameQueryResult", usernameQueryResult);
-    // null should clear the pipeline, for re-init/reset states
-    const result = usernameQueryResult == null ? usernameQueryResult : usernameQueryResult.data;
-    switch (result) {
-      case undefined:
-        break;
-      case null: 
-        // console.log("usernamePromptDispatch({type: 'RESET'});");  
-        usernamePromptDispatch({type: 'RESET'});
-        break;
-      case true: 
-          // console.log("usernamePromptDispatch({type: 'LOOKUP_SUCCESS', payload: result});");  
-        usernamePromptDispatch({type: 'LOOKUP_SUCCESS', payload: result});
-        break;
-      case false:
-        // console.log("usernamePromptDispatch({type: 'LOOKUP_FAILURE'})");  
-        usernamePromptDispatch({type: 'LOOKUP_FAILURE'})
-        break;
-      default: 
-        // console.log("usernamePromptDispatch({type: 'INIT'});");  
-        usernamePromptDispatch({type: "INIT"});
-    }
-  }, [usernameQueryResult])
+    // Processing Username-prompt specific states
   useEffect(() => {
     const status = usernamePrompt.queryStatus;
     console.log("queryStatus changed to:", status);
@@ -192,15 +159,13 @@ const EntryView = () => {
                     const submitUsername = () => {
                       if (values.email && values.email.length) {
                         usernamePromptDispatch({
-                          type: 'LOOKUP_ATTEMPT',
+                          type: 'VALIDATE_ATTEMPT',
                           payload: values.email
                         })
                       }
-                      // if (values.email && values.email.length) setUsernameQuery(values.email);
                     };
                     onUsernameQuerySuccess.current = () => {
-                      // setUsernameQuery(undefined);
-                      usernamePromptDispatch({type: 'LOOKUP_SUCCESS'});
+                      usernamePromptDispatch({type: 'VALIDATE_SUCCESS'});
                       setPasswordAutofocus(false);
                       values.email && !errors.email && pagerDispatch({type: 'increment'});
                       setTouched({...touched, email: true});
