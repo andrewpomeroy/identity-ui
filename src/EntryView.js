@@ -3,7 +3,7 @@ import { Formik } from 'formik';
 import landingBG from './clientAssets/landing-bg.jpg';
 import styled from '@emotion/styled/macro';
 import { PrimaryButton, GhostIconButton } from './components/Buttons';
-import ModalBlock from './components/ModalBlock';
+import ModalBlock, { ModalBlockWithRows, ModalBlockRow, modalBlockSpacerHeights, ModalBlockSpacer, ModalBlockTitle, ModalBlockTitleSmall } from './components/ModalBlock';
 import { AppBrandWithSubhead } from './components/AppBrand';
 import { Heading4, UnstyledHeading, getComputedLineHeight } from './theme/commonType';
 import Input from './components/Input';
@@ -49,29 +49,6 @@ const CenterContainer = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-`
-
-const ModalBlockBox = styled.div``
-
-const modalBlockSpacerHeights = {
-  small: 26,
-  default: 36,
-  large: 48
-}
-const ModalBlockSpacer = styled.div`
-  height: ${props => modalBlockSpacerHeights[props.size || 'default']}px;
-`
-const ModalBlockTitle = styled(Heading4)`
-  font-weight: 600;
-  strong {
-    font-weight: 700;
-  }
-`
-const ModalBlockTitleSmall = styled(ModalBlockTitle)`
-  font-size: ${typeScaleMap.h5}px;
-  /* line-height: ${getComputedLineHeight('h4')}px; */
-  text-overflow: ellipsis;
-  overflow: hidden;
 `
 
 const Alert = styled.div`
@@ -193,7 +170,6 @@ const EntryView = () => {
   return (
     <LandingBackground>
       <CenterContainer>
-        <ModalBlock>
           <Formik
             initialValues={initialValues}
             validationSchema={LoginSchema}
@@ -206,9 +182,12 @@ const EntryView = () => {
             }}
             render={({ handleSubmit, handleChange, handleBlur, setTouched, setFieldValue, isSubmitting, values, errors, touched }) => (
             <React.Fragment>
-              <form onSubmit={handleSubmit}>
-                <AppBrandWithSubhead large />
-                <ModalBlockSpacer size="small" />
+              <ModalBlockWithRows>
+                <form onSubmit={handleSubmit}>
+                  <ModalBlockRow>
+                    <AppBrandWithSubhead large />
+                    <ModalBlockSpacer size="small" />
+                  </ModalBlockRow>
                   <Pager>{({currentPage, transitionDirection}, pagerDispatch) => {
                     const submitUsername = () => {
                       if (values.email && values.email.length) {
@@ -244,48 +223,51 @@ const EntryView = () => {
                           page={0}
                           transitionDirection={transitionDirection}
                           currentPage={currentPage}>
-                          <ModalBlockTitle as="div">&nbsp;</ModalBlockTitle>
-                          <ModalBlockTitle as="h2">Sign in to your account</ModalBlockTitle>
-                          <ModalBlockSpacer size="small" />
-                          <InputWithValidation 
-                            label="Email Address" 
-                            name="email" 
-                            onEnterKey={submitUsername}
-                            onChange={handleChange} 
-                            onBlur={handleBlur} 
-                            values={values} 
-                            errors={errors}
-                            touched={touched}
-                            control={
-                              <Input autoComplete={uuid()} willAutoFocus={usernameAutofocus} />
-                            } />
-                          {usernamePrompt.queryStatus === 'FAILURE' ?
-                            <>
-                              <Alert>Sorry, <strong>{usernamePrompt.attemptedQueryString}</strong> is not a valid username.</Alert>
-                              <ModalBlockSpacer size="small" />
-                            </>
-                            : <ModalBlockSpacer size="default" />
-                          }
-                          <FlexContainer justifyContent="flex-end">
-                            <FlexItem auto>
-                              {/* TODO: Replace this with an icon-button pattern */}
-                              <PrimaryButton
-                                buttonSpacing={3}
-                                onClick={submitUsername}
-                                isDisabled={!values.email || errors.email || usernamePrompt.queryStatus === "LOADING" || usernamePrompt.}>
-                                <ButtonLoaderShell isLoading={usernamePrompt.queryStatus === "LOADING"}>
-                                  <FlexContainer alignItems="center">
-                                    <SplitWithChildMargin gutter={8}>
-                                      <FlexItem>Next</FlexItem>
-                                      <FlexItem auto style={{marginTop: -5, marginBottom: -5}}>
-                                        <Arrow size={20}></Arrow>
-                                      </FlexItem>
-                                    </SplitWithChildMargin>
-                                  </FlexContainer>
-                                </ButtonLoaderShell>
-                              </PrimaryButton>
-                          </FlexItem>
-                          </FlexContainer>
+                          <ModalBlockRow>
+
+                            <ModalBlockTitle as="div">&nbsp;</ModalBlockTitle>
+                            <ModalBlockTitle as="h2">Sign in to your account</ModalBlockTitle>
+                            <ModalBlockSpacer size="small" />
+                            <InputWithValidation 
+                              label="Email Address" 
+                              name="email" 
+                              onEnterKey={submitUsername}
+                              onChange={handleChange} 
+                              onBlur={handleBlur} 
+                              values={values} 
+                              errors={errors}
+                              touched={touched}
+                              control={
+                                <Input autoComplete={uuid()} willAutoFocus={usernameAutofocus} />
+                              } />
+                            {usernamePrompt.queryStatus === 'FAILURE' ?
+                              <>
+                                <Alert>Sorry, the username <strong>{usernamePrompt.attemptedQueryString}</strong> is not registered in the system.</Alert>
+                                <ModalBlockSpacer size="small" />
+                              </>
+                              : <ModalBlockSpacer size="default" />
+                            }
+                            <FlexContainer justifyContent="flex-end">
+                              <FlexItem auto>
+                                {/* TODO: Replace this with an icon-button pattern */}
+                                <PrimaryButton
+                                  buttonSpacing={3}
+                                  onClick={submitUsername}
+                                  isDisabled={!values.email || errors.email || usernamePrompt.queryStatus === "LOADING" || usernamePrompt.attemptedQueryString === values.email}>
+                                  <ButtonLoaderShell isLoading={usernamePrompt.queryStatus === "LOADING"}>
+                                    <FlexContainer alignItems="center">
+                                      <SplitWithChildMargin gutter={8}>
+                                        <FlexItem>Next</FlexItem>
+                                        <FlexItem auto style={{marginTop: -5, marginBottom: -5}}>
+                                          <Arrow size={20}></Arrow>
+                                        </FlexItem>
+                                      </SplitWithChildMargin>
+                                    </FlexContainer>
+                                  </ButtonLoaderShell>
+                                </PrimaryButton>
+                            </FlexItem>
+                            </FlexContainer>
+                          </ModalBlockRow>
                         </Page>
                         <Page
                           key={1}
@@ -295,61 +277,63 @@ const EntryView = () => {
                             setPasswordAutofocus(true)
                           }}
                           currentPage={currentPage}>
-                          <FlexContainer flexDirection="column" justifyContent="flex-end" style={{height: getComputedLineHeight('h4') * 2}}>
-                            <FlexItem auto>
-                              <SplitWithChildMargin gutter={8}>
-                                <FlexItem auto>
-                                  <GhostIconButton
-                                    onClick={backToUsernameEntry}
-                                    size={`${getComputedLineHeight('h5')}px`}
-                                    icon={<Arrow direction="left"></Arrow>} />
-                                </FlexItem>
-                                <FlexItem>
-                                  <UnstyledHeading as="h2">
-                                    <ModalBlockTitleSmall as="div">Signing in as</ModalBlockTitleSmall>
-                                    <ModalBlockTitleSmall as="div" title="{values.email}"><strong>{values.email}</strong></ModalBlockTitleSmall>
-                                  </UnstyledHeading>
-                                </FlexItem>
-                              </SplitWithChildMargin>
-                            </FlexItem>
-                          </FlexContainer>
-                          <ModalBlockSpacer size="small" />
-                          <InputWithValidation
-                            label="Password"
-                            name="password"
-                            allowEnterKey={true}
-                            onChange={handleChange} 
-                            onBlur={handleBlur} 
-                            values={values} 
-                            errors={errors}
-                            touched={touched}
-                            control={
-                              <Input type="password" autoComplete={uuid()} willAutoFocus={passwordAutofocus}/>
-                            } />
-                          <ModalBlockSpacer size="default" />
-                          <FlexContainer justifyContent="flex-end">
-                            <FlexItem auto>
-                              <PrimaryButton
-                                buttonSpacing={3} type="submit" isDisabled={isSubmitting || !values.password}>
-                                <ButtonLoaderShell isLoading={isSubmitting} disabled={isSubmitting}>
-                                  <FlexContainer alignItems="center">
-                                    <SplitWithChildMargin gutter={spacing[0]}>
-                                      <FlexItem>Sign In</FlexItem>
-                                    </SplitWithChildMargin>
-                                  </FlexContainer>
-                                </ButtonLoaderShell>
-                              </PrimaryButton>
-                            </FlexItem>
-                          </FlexContainer>
+                          <ModalBlockRow>
+
+                            <FlexContainer flexDirection="column" justifyContent="flex-end" style={{height: getComputedLineHeight('h4') * 2}}>
+                              <FlexItem auto>
+                                <SplitWithChildMargin gutter={8}>
+                                  <FlexItem auto>
+                                    <GhostIconButton
+                                      onClick={backToUsernameEntry}
+                                      size={`${getComputedLineHeight('h5')}px`}
+                                      icon={<Arrow direction="left"></Arrow>} />
+                                  </FlexItem>
+                                  <FlexItem>
+                                    <UnstyledHeading as="h2">
+                                      <ModalBlockTitleSmall as="div">Signing in as</ModalBlockTitleSmall>
+                                      <ModalBlockTitleSmall as="div" title="{values.email}"><strong>{values.email}</strong></ModalBlockTitleSmall>
+                                    </UnstyledHeading>
+                                  </FlexItem>
+                                </SplitWithChildMargin>
+                              </FlexItem>
+                            </FlexContainer>
+                            <ModalBlockSpacer size="small" />
+                            <InputWithValidation
+                              label="Password"
+                              name="password"
+                              allowEnterKey={true}
+                              onChange={handleChange} 
+                              onBlur={handleBlur} 
+                              values={values} 
+                              errors={errors}
+                              touched={touched}
+                              control={
+                                <Input type="password" autoComplete={uuid()} willAutoFocus={passwordAutofocus}/>
+                              } />
+                            <ModalBlockSpacer size="default" />
+                            <FlexContainer justifyContent="flex-end">
+                              <FlexItem auto>
+                                <PrimaryButton
+                                  buttonSpacing={3} type="submit" isDisabled={isSubmitting || !values.password}>
+                                  <ButtonLoaderShell isLoading={isSubmitting} disabled={isSubmitting}>
+                                    <FlexContainer alignItems="center">
+                                      <SplitWithChildMargin gutter={spacing[0]}>
+                                        <FlexItem>Sign In</FlexItem>
+                                      </SplitWithChildMargin>
+                                    </FlexContainer>
+                                  </ButtonLoaderShell>
+                                </PrimaryButton>
+                              </FlexItem>
+                            </FlexContainer>
+                          </ModalBlockRow>
                         </Page>
                       </React.Fragment>
                     )}
-                  }
-                </Pager>
-              </form>
+                  }</Pager>
+                </form>
+              </ModalBlockWithRows>
             </React.Fragment>
           )} />
-        </ModalBlock>
       </CenterContainer>  
     </LandingBackground>
   );
