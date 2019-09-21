@@ -7,7 +7,7 @@ export const validateUsername = (query) => {
       if (_validateUsername(query)) {
         resolve({"errors":null,"isSuccess":true,"isError":false})
       }
-      else resolve({"errors": ["Bad username"],"isSuccess":false,"isError":true});
+      else resolve({"errors": ["The account you entered does not exist."],"isSuccess":false,"isError":true});
     }, 1000)
   });
 }
@@ -18,7 +18,7 @@ export const authenticate = (query) => {
       if (_validateUsername(query.username) && _validatePassword(query.password)) {
         resolve({"errors":null,"isSuccess":true,"isError":false})        
       }
-      else resolve({"errors": ["Bad credentials"],"isSuccess":false,"isError":true});
+      else resolve({"errors": ["The password you entered is incorrect. Please try again."],"isSuccess":false,"isError":true});
     }, 1000)
   })
 }

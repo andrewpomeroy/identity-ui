@@ -220,7 +220,12 @@ const EntryView = () => {
                               control={
                                 <Input type="password" autoComplete={uuid()} willAutoFocus={passwordAutofocus}/>
                               } />
-                            <ModalBlockSpacer size="default" />
+                              {passwordPrompt.errors && passwordPrompt.errors.length ?
+                              <>
+                                {passwordPrompt.errors.map((error, index) => <Alert key={index}>{error}</Alert>)}
+                                <ModalBlockSpacer size="small" />
+                              </>
+                              : <ModalBlockSpacer size="default" />}
                             <FlexContainer justifyContent="flex-end">
                               <FlexItem auto>
                                 <PrimaryButton

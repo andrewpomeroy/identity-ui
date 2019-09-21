@@ -32,7 +32,7 @@ const _reducer = (state, action) => {
         ...state,
         queryStatus: 'FAILURE',
         query: null,
-        errors: action.payload.errors,
+        errors: action.payload.data.errors,
         lastFailedQuery: state.query
       }
     case 'VALIDATE_ERROR': 
@@ -69,12 +69,12 @@ const useValidateField = (queryFn) => {
   // useValidationResponseHandler(response, dispatch);
   useEffect(() => {
     if (isError) {
-      dispatch({type: 'VALIDATE_ERROR', payload: response.error})
+      dispatch({type: 'VALIDATE_ERROR', payload: {...response} })
     }
     if (response && response.data) {
       dispatch(response.data.isSuccess
-        ? {type: 'VALIDATE_SUCCESS'}
-        : {type: 'VALIDATE_FAILURE', payload: response.data.errors});
+        ? {type: 'VALIDATE_SUCCESS', payload: { ...response }}
+        : {type: 'VALIDATE_FAILURE', payload: { ...response }});
     }
   }, [response, isError])
 
