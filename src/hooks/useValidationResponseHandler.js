@@ -2,24 +2,21 @@ import { useEffect } from 'react';
 
 const useValidationResponseHandler = (queryResult, dispatch, actionTypes = {}) => {
   return useEffect(() => {
+    if (!queryResult) {
+      return;
+    }
     console.log("queryResult", queryResult);
-    // null should clear the pipeline, for re-init/reset states
-    const result = queryResult == null ? queryResult : queryResult.data;
-    switch (result) {
-      case undefined:
-        break;
-      case null: 
-        dispatch({type: actionTypes.reset || 'RESET'});
-        break;
+    const data = queryResult.data;
+    switch (data.isSuccess) {
       case true: 
-        dispatch({type: actionTypes.success || 'VALIDATE_SUCCESS', payload: result});
+        dispatch({type: actionTypes.success || 'VALIDATE_SUCCESS'})
         break;
       case false:
-        dispatch({type: actionTypes.failure || 'VALIDATE_FAILURE'})
+        dispatch({type: actionTypes.failure || 'VALIDATE_FAILURE', payload: data.errors});
         break;
-      default: 
-        dispatch({type: actionTypes.init || "INIT"});
+      default:
+        dispatch({type: actionTypes.error || 'ERROR'})
     }
-  }, [actionTypes.failure, actionTypes.init, actionTypes.reset, actionTypes.success, dispatch, queryResult])
+  }, [actionTypes.failure, actionTypes.success, actionTypes.error, dispatch, queryResult])
 }
 export default useValidationResponseHandler;

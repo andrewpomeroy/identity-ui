@@ -21,6 +21,7 @@ import useDataApi from './hooks/useDataApi';
 import { validateUsername } from './services/mockAuthServices';
 import useValidationResponseHandler from './hooks/useValidationResponseHandler';
 import Alert from './components/Alert';
+import useValidateField from './hooks/useValidateField';
 
 const LoginSchema = Yup.object().shape({
   email: Yup.string()
@@ -53,63 +54,21 @@ const CenterContainer = styled.div`
   justify-content: center;
 `
 
-const usernamePromptInitialState = {
-  // enteredUsername: undefined,
-  queryStatus: undefined,
-  queryString: undefined,
-  results: undefined,
-  attemptedQueryString: undefined
-}
-const usernamePromptReducer = (state, action) => {
-  console.log("usernamePromptReducer", action.type, action.payload);
-  switch (action.type) {
-    case 'INIT': 
-    case 'RESET': 
-      return {
-        ...usernamePromptInitialState
-      }
-    case 'VALIDATE_ATTEMPT':
-      return {
-        ...state,
-        queryStatus: 'LOADING',
-        queryString: action.payload,
-        attemptedQueryString: null
-      }
-    case 'VALIDATE_SUCCESS': 
-      return {
-        queryStatus: 'SUCCESS',
-        queryString: null,
-        results: action.payload,
-      }
-    case 'VALIDATE_FAILURE': 
-      return {
-        ...state,
-        queryStatus: 'FAILURE',
-        queryString: null,
-        results: undefined,
-        attemptedQueryString: state.queryString
-      }
-    default:
-      throw new Error();
-  }
-}
-
 const EntryView = () => {
   const [usernameAutofocus, setUsernameAutofocus] = useState(true);
   const [passwordAutofocus, setPasswordAutofocus] = useState(false);
-  const [usernamePrompt, usernamePromptDispatch] = useReducer(usernamePromptReducer, usernamePromptInitialState);
+  const [usernamePrompt, usernamePromptDispatch] = useValidateField();
+  // TODO: Handle errors?
   const [{ data: usernameQueryResult, isLoading, isError }, doFetch] = useDataApi(
     undefined, // url
     undefined, // initial result state
   );
   useValidationResponseHandler(usernameQueryResult, usernamePromptDispatch)
-  // The on-success function needs to be redefined later, since it will need to contain references not instantiated yet — things provided by the Formik render function, so we just re-define when we render to that depth of the component tree.
   const onUsernameQuerySuccess = useRef();
 
   // Username validity testing
   useEffect(() => {
     const query = usernamePrompt.queryString;
-    console.log('maybe querying', query);
     if (query && query.length) {
       doFetch(() => validateUsername(query));
       // doFetch(`https://hn.algolia.com/api/v1/search?query=${query}`)
@@ -117,18 +76,11 @@ const EntryView = () => {
     // Gotta clear the fetch hook's pipeline in case the user wants to make the same query again
     // Pass through null (clear) or undefined (init)
     else doFetch(query);
-  }, [doFetch, usernamePrompt.queryString]);
-  useEffect(() => {
-    if (isError) {
-      console.log("isError", isError);
-      usernamePromptDispatch({type: 'VALIDATE_FAILURE'})
-    }
-  }, [isError])
+  }, [doFetch, usernamePrompt, usernamePrompt.queryString]);
 
     // Processing Username-prompt specific states
   useEffect(() => {
     const status = usernamePrompt.queryStatus;
-    console.log("queryStatus changed to:", status);
     if (status === 'SUCCESS') onUsernameQuerySuccess.current();
     // Refresh autofocus on the Username field
     if (status === 'FAILURE') setUsernameAutofocus(uuid());
