@@ -52,14 +52,14 @@ const useDataApi = (initialEndpoint, initialData) => {
           if (!didCancel) {
             dispatch({ type: 'FETCH_SUCCESS', payload: {
               data: result,
-              key: uuid()
+              transactionId: uuid()
             }});
           }
         } catch (error) {
           if (!didCancel) {
             dispatch({ type: 'FETCH_FAILURE', payload: {
               error: error,
-              key: uuid()
+              transactionId: uuid()
             }});
           }
         }

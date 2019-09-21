@@ -117,6 +117,7 @@ const EntryView = () => {
                     }
                     const backToUsernameEntry = () => {
                       usernamePromptDispatch({type: 'RESET'});
+                      passwordPromptDispatch({type: 'RESET'});
                       setTouched({...touched, password: false});
                       setFieldValue('password', '')
                       // Prevent some weirdness with setFieldValue being async, trying to transition while changing values
