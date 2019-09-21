@@ -4,8 +4,8 @@ import useDataApi from './useDataApi';
 
 const _initialState = {
   queryStatus: undefined,
-  queryString: undefined,
-  attemptedQueryString: undefined
+  query: undefined,
+  lastFailedQuery: undefined
 }
 const _reducer = (state, action) => {
   switch (action.type) {
@@ -18,30 +18,30 @@ const _reducer = (state, action) => {
       return {
         ...state,
         queryStatus: 'LOADING',
-        queryString: action.payload,
-        attemptedQueryString: null
+        query: action.payload,
+        lastFailedQuery: null
       }
     case 'VALIDATE_SUCCESS': 
       return {
         queryStatus: 'SUCCESS',
-        queryString: null,
+        query: null,
       }
     case 'VALIDATE_FAILURE': 
       console.log("VALIDATE_FAILURE", action.payload);
       return {
         ...state,
         queryStatus: 'FAILURE',
-        queryString: null,
+        query: null,
         errors: action.payload.errors,
-        attemptedQueryString: state.queryString
+        lastFailedQuery: state.query
       }
     case 'VALIDATE_ERROR': 
       return {
         ...state,
         queryStatus: 'FAILURE',
-        queryString: null,
+        query: null,
         errors: [action.payload.error],
-        attemptedQueryString: state.queryString
+        lastFailedQuery: state.query
       }
     default:
       throw new Error();
@@ -56,8 +56,8 @@ const useValidateField = (queryFn) => {
     undefined, // initial result state
   );
   useEffect(() => {
-    const query = reducer.queryString;
-    if (query && query.length) {
+    const query = reducer.query;
+    if (query) {
       setQuery(() => queryFn(query));
     }
     else {
@@ -65,7 +65,7 @@ const useValidateField = (queryFn) => {
       // Pass through null (clear) or undefined (init)
       setQuery(query);
     }
-  }, [queryFn, reducer.queryString, setQuery]);
+  }, [queryFn, reducer.query, setQuery]);
   // useValidationResponseHandler(response, dispatch);
   useEffect(() => {
     if (isError) {

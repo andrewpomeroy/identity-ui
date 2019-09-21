@@ -17,7 +17,7 @@ import * as Yup from 'yup';
 import uuid from 'uuid4';
 import ButtonLoaderShell from './components/ButtonLoaderShell';
 import Pager, { Page } from './components/Pager';
-import { validateUsername } from './services/mockAuthServices';
+import { validateUsername, authenticate } from './services/mockAuthServices';
 import Alert from './components/Alert';
 import useValidateField from './hooks/useValidateField';
 
@@ -56,27 +56,10 @@ const EntryView = () => {
   const [usernameAutofocus, setUsernameAutofocus] = useState(true);
   const [passwordAutofocus, setPasswordAutofocus] = useState(false);
   const [usernamePrompt, usernamePromptDispatch] = useValidateField(validateUsername);
-  // const [passwordPrompt, passwordPromptDispatch] = useReducer(usernamePromptReducer, usernamePromptInitialState);
-  // useValidationResponseHandler(passwordQueryResult, passwordPromptDispatch)
-  // const [{ data: usernameQueryResult, isLoading, isError }, doFetch] = useDataApi(
-  //   undefined, // url
-  //   undefined, // initial result state
-  // );
+  const [passwordPrompt, passwordPromptDispatch] = useValidateField(authenticate);
+  
   // The on-success function needs to be redefined later, since it will need to contain references not instantiated yet — things provided by the Formik render function, so we just re-define when we render to that depth of the component tree.
   const onUsernameQuerySuccess = useRef();
-
-  // Password validity testing
-  // useEffect(() => {
-  //   const query = usernamePrompt.queryString;
-  //   console.log('maybe querying', query);
-  //   if (query && query.length) {
-  //     doFetch(() => validateUsername(query));
-  //     // doFetch(`https://hn.algolia.com/api/v1/search?query=${query}`)
-  //   }
-  //   // Gotta clear the fetch hook's pipeline in case the user wants to make the same query again
-  //   // Pass through null (clear) or undefined (init)
-  //   else doFetch(query);
-  // }, [doFetch, usernamePrompt.queryString]);
 
     // Processing Username-prompt specific states
   useEffect(() => {
@@ -85,6 +68,12 @@ const EntryView = () => {
     // Refresh autofocus on the Username field
     if (status === 'FAILURE') setUsernameAutofocus(uuid());
   }, [usernamePrompt.queryStatus])
+
+  useEffect(() => {
+    const status = passwordPrompt.queryStatus;
+    if (status === 'SUCCESS') alert('Success!')
+    if (status === 'FAILURE') console.log(passwordPrompt);
+  }, [passwordPrompt, passwordPrompt.queryStatus])
   
   return (
     <LandingBackground>
@@ -94,10 +83,14 @@ const EntryView = () => {
             validationSchema={LoginSchema}
             validateOnChange={true}
             onSubmit={(values, actions) => {
-              setTimeout(() => {
-                alert("Success! \n\n" + JSON.stringify(values, null, 2));
-                actions.setSubmitting(false);
-              }, 1000);
+              // setTimeout(() => {
+              //   alert("Success! \n\n" + JSON.stringify(values, null, 2));
+              //   actions.setSubmitting(false);
+              // }, 1000);
+              passwordPromptDispatch({
+                type: 'VALIDATE_ATTEMPT',
+                payload: {username: values.email, password: values.password}
+              })
             }}
             render={({ handleSubmit, handleChange, handleBlur, setTouched, setFieldValue, isSubmitting, values, errors, touched }) => (
             <React.Fragment>
@@ -231,8 +224,10 @@ const EntryView = () => {
                             <FlexContainer justifyContent="flex-end">
                               <FlexItem auto>
                                 <PrimaryButton
-                                  buttonSpacing={3} type="submit" isDisabled={isSubmitting || !values.password}>
-                                  <ButtonLoaderShell isLoading={isSubmitting} disabled={isSubmitting}>
+                                  buttonSpacing={3}
+                                  type="submit"
+                                  isDisabled={!values.password || errors.password || passwordPrompt.queryStatus === "LOADING"}>
+                                  <ButtonLoaderShell isLoading={passwordPrompt.queryStatus === "LOADING"} disabled={!values.password || errors.password || passwordPrompt.queryStatus === "LOADING"}>
                                     <FlexContainer alignItems="center">
                                       <SplitWithChildMargin gutter={spacing[0]}>
                                         <FlexItem>Sign In</FlexItem>

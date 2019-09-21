@@ -12,7 +12,7 @@ const dataFetchReducer = (state, action) => {
         isError: false
       };
     case 'FETCH_SUCCESS':
-      // console.log('FETCH_SUCCESS', action.payload);
+      console.log('FETCH_SUCCESS', action.payload);
       return {
         ...state,
         isLoading: false,
@@ -20,7 +20,7 @@ const dataFetchReducer = (state, action) => {
         data: action.payload,
       };
     case 'FETCH_FAILURE':
-      // console.log('FETCH_FAILURE');
+      // console.log('FETCH_FAILURE', action.payload);
       return {
         ...state,
         isLoading: false,
@@ -45,13 +45,10 @@ const useDataApi = (initialEndpoint, initialData) => {
       const fetchData = async () => {
         dispatch({ type: 'FETCH_INIT' });
         try {
-          let result;
-          if (typeof endpoint === 'string') {
-            result = await axios(endpoint);
-          }
-          else {
-            result = await endpoint;
-          }
+          const result = (typeof endpoint === 'string')
+            ? await axios(endpoint)
+            : await endpoint
+          
           if (!didCancel) {
             dispatch({ type: 'FETCH_SUCCESS', payload: {
               data: result,
