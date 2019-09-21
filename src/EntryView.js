@@ -17,9 +17,7 @@ import * as Yup from 'yup';
 import uuid from 'uuid4';
 import ButtonLoaderShell from './components/ButtonLoaderShell';
 import Pager, { Page } from './components/Pager';
-import useDataApi from './hooks/useDataApi';
 import { validateUsername } from './services/mockAuthServices';
-import useValidationResponseHandler from './hooks/useValidationResponseHandler';
 import Alert from './components/Alert';
 import useValidateField from './hooks/useValidateField';
 
@@ -57,26 +55,28 @@ const CenterContainer = styled.div`
 const EntryView = () => {
   const [usernameAutofocus, setUsernameAutofocus] = useState(true);
   const [passwordAutofocus, setPasswordAutofocus] = useState(false);
-  const [usernamePrompt, usernamePromptDispatch] = useValidateField();
-  // TODO: Handle errors?
-  const [{ data: usernameQueryResult, isLoading, isError }, doFetch] = useDataApi(
-    undefined, // url
-    undefined, // initial result state
-  );
-  useValidationResponseHandler(usernameQueryResult, usernamePromptDispatch)
+  const [usernamePrompt, usernamePromptDispatch] = useValidateField(validateUsername);
+  // const [passwordPrompt, passwordPromptDispatch] = useReducer(usernamePromptReducer, usernamePromptInitialState);
+  // useValidationResponseHandler(passwordQueryResult, passwordPromptDispatch)
+  // const [{ data: usernameQueryResult, isLoading, isError }, doFetch] = useDataApi(
+  //   undefined, // url
+  //   undefined, // initial result state
+  // );
+  // The on-success function needs to be redefined later, since it will need to contain references not instantiated yet — things provided by the Formik render function, so we just re-define when we render to that depth of the component tree.
   const onUsernameQuerySuccess = useRef();
 
-  // Username validity testing
-  useEffect(() => {
-    const query = usernamePrompt.queryString;
-    if (query && query.length) {
-      doFetch(() => validateUsername(query));
-      // doFetch(`https://hn.algolia.com/api/v1/search?query=${query}`)
-    }
-    // Gotta clear the fetch hook's pipeline in case the user wants to make the same query again
-    // Pass through null (clear) or undefined (init)
-    else doFetch(query);
-  }, [doFetch, usernamePrompt, usernamePrompt.queryString]);
+  // Password validity testing
+  // useEffect(() => {
+  //   const query = usernamePrompt.queryString;
+  //   console.log('maybe querying', query);
+  //   if (query && query.length) {
+  //     doFetch(() => validateUsername(query));
+  //     // doFetch(`https://hn.algolia.com/api/v1/search?query=${query}`)
+  //   }
+  //   // Gotta clear the fetch hook's pipeline in case the user wants to make the same query again
+  //   // Pass through null (clear) or undefined (init)
+  //   else doFetch(query);
+  // }, [doFetch, usernamePrompt.queryString]);
 
     // Processing Username-prompt specific states
   useEffect(() => {
