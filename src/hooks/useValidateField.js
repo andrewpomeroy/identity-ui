@@ -1,5 +1,4 @@
 import { useReducer, useEffect } from 'react';
-import useValidationResponseHandler from './useValidationResponseHandler';
 import useDataApi from './useDataApi';
 
 const _initialState = {
@@ -51,7 +50,7 @@ const _reducer = (state, action) => {
 const useValidateField = (queryFn) => {
   const [reducer, dispatch] = useReducer(_reducer, _initialState);
   // TODO: Break this out. Pass in via hook composition
-  const [{ data: response, isLoading, isError }, setQuery] = useDataApi(
+  const [{ data: response, isError }, setQuery] = useDataApi(
     undefined, // url
     undefined, // initial result state
   );
@@ -66,7 +65,6 @@ const useValidateField = (queryFn) => {
       setQuery(query);
     }
   }, [queryFn, reducer.query, setQuery]);
-  // useValidationResponseHandler(response, dispatch);
   useEffect(() => {
     if (isError) {
       dispatch({type: 'VALIDATE_ERROR', payload: {...response} })

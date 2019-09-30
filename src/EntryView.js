@@ -1,16 +1,15 @@
-import React, { useState, useEffect, useRef, useReducer } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Formik } from 'formik';
 import landingBG from './clientAssets/landing-bg.jpg';
 import styled from '@emotion/styled/macro';
 import { PrimaryButton, GhostIconButton } from './components/Buttons';
-import ModalBlock, { ModalBlockWithRows, ModalBlockRow, modalBlockSpacerHeights, ModalBlockSpacer, ModalBlockTitle, ModalBlockTitleSmall } from './components/ModalBlock';
+import { ModalBlockWithRows, ModalBlockRow, ModalBlockSpacer, ModalBlockTitle, ModalBlockTitleSmall } from './components/ModalBlock';
 import { AppBrandWithSubhead } from './components/AppBrand';
-import { Heading4, UnstyledHeading, getComputedLineHeight } from './theme/commonType';
+import { UnstyledHeading, getComputedLineHeight } from './theme/commonType';
 import Input from './components/Input';
 import { FlexContainer, FlexItem } from './components/commonLayout';
 import SplitWithChildMargin from './components/SplitWithChildMargin';
-import { spacing, colors } from './theme/theme';
-import { typeScaleMap } from './theme/themeMapping';
+import { spacing } from './theme/theme';
 import { Arrow } from './components/ArrowComponents';
 import InputWithValidation from './components/InputWithValidation';
 import * as Yup from 'yup';
@@ -74,7 +73,7 @@ const EntryView = () => {
     if (status === 'SUCCESS') alert('Success!')
     if (status === 'FAILURE') console.log(passwordPrompt);
   }, [passwordPrompt, passwordPrompt.queryStatus])
-  
+
   return (
     <LandingBackground>
       <CenterContainer>

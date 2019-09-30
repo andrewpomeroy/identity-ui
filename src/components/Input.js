@@ -1,8 +1,7 @@
-import React, { useRef, useState, useEffect, forwardRef } from "react";
+import React, { useRef, useEffect } from "react";
 import { colorMap } from "../theme/themeMapping";
 import Color from 'color';
 import styled from "@emotion/styled/macro";
-import isPropValid from '@emotion/is-prop-valid';
 
 const inputStyleProps = {
   fontSize: 18,

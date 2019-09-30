@@ -1,7 +1,6 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { colorMap } from "../theme/themeMapping";
+import React, { useState, useEffect } from 'react';
 import styled from "@emotion/styled/macro";
-import Input, {InputLabel} from "./Input";
+import {InputLabel} from "./Input";
 import PropTypes from 'prop-types';
 import { colors } from '../theme/theme';
 import uuid from 'uuid4';
@@ -42,7 +41,7 @@ const InputWithValidation = (props) => {
 
   useEffect(() => {
     setisError(props.touched[props.name]  && props.errors[props.name]);
-    setMessages(props.touched[props.name] && props.errors[props.name] && makeMessagesArray(props.errors[props.name]) || []);
+    setMessages((props.touched[props.name] && props.errors[props.name] && makeMessagesArray(props.errors[props.name])) || []);
   }, [props.name, props.errors, props.touched]);
 
   const handleKeyDown = (event) => {

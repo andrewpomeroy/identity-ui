@@ -1,6 +1,5 @@
 import React from 'react';
 import styled from '@emotion/styled/macro';
-import WrappedInlineSvg from './WrappedInlineSvg';
 import LoadingSpinner from './LoadingSpinner';
 import posed, { PoseGroup } from 'react-pose';
 

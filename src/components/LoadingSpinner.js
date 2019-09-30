@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from '@emotion/styled/macro';
-import { jsx, keyframes } from '@emotion/core';
+import { keyframes } from '@emotion/core';
 
 
 const SpinnerOuter = styled.div`
