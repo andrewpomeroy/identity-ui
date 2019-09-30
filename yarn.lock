@@ -1787,24 +1787,25 @@
     "@webassemblyjs/wast-parser" "1.8.5"
     "@xtuc/long" "4.2.2"
 
-"@windsor/ui-kit-color-system-generator@^0.0.2":
-  version "0.0.2"
-  resolved "https://nexus.windsorcloud.com/repository/npm/@windsor/ui-kit-color-system-generator/-/ui-kit-color-system-generator-0.0.2.tgz#f4f75d8509dde9eae6cb5ce9905f3ba8015ab9c4"
-  integrity sha512-mF+eZeIZ2rw4DuwQFzexdYiOz3NaH24eQQnkUtdXAQjqMhRLWnTf0zYQb3WkUohB0vp8f172zxXDkI8tpHcXJQ==
+"@windsor/ui-kit-color-system-generator@^0.0.7-alpha.0":
+  version "0.0.7-alpha.0"
+  resolved "https://nexus.windsorcloud.com/repository/npm/@windsor/ui-kit-color-system-generator/-/ui-kit-color-system-generator-0.0.7-alpha.0.tgz#6f6b75140129f1c0e8e7c757aa6d70f3207b3303"
+  integrity sha512-IAYr/pN50QgMEp1DxWTv87rtoCCI0wlF5dZ1FWf7mLe6xCIPU3G8RJz3/BKV7bB5gHNQmWifpN5behDbl9eLWg==
   dependencies:
     deepmerge "^3.2.0"
+    tinycolor2 "^1.4.1"
 
-"@windsor/ui-kit-core@^0.0.2":
-  version "0.0.2"
-  resolved "https://nexus.windsorcloud.com/repository/npm/@windsor/ui-kit-core/-/ui-kit-core-0.0.2.tgz#0cfac924bc8c1d806397bb597f1674b6522b4941"
-  integrity sha512-3cIVPFrVgvWI1uhDLIyWPIftWE1+Bm6WRElfFmjb8nGMTNsKZ2LnCzrOUNlqH4GScPvCIrlex17NH/hZYQvthg==
+"@windsor/ui-kit-core@^0.0.7-alpha.0":
+  version "0.0.7-alpha.0"
+  resolved "https://nexus.windsorcloud.com/repository/npm/@windsor/ui-kit-core/-/ui-kit-core-0.0.7-alpha.0.tgz#4b5fb75bc9886fdd47bf978347cbc7f662f9ab67"
+  integrity sha512-wGOljwxyigFKoQB3cMtwUziEjcE5xohIHxuzK8Rho1rKX44MphyuCcHCRooiOaTTYADsN5c1p8izWKJYbyWeTg==
   dependencies:
     "@emotion/core" "^10.0.10"
     "@emotion/styled" "^10.0.10"
-    "@windsor/ui-kit-color-system-generator" "^0.0.2"
-    "@windsor/ui-kit-icons" "^0.0.2"
-    "@windsor/ui-kit-styled-system" "^0.0.2"
-    "@windsor/ui-kit-theme" "^0.0.2"
+    "@windsor/ui-kit-color-system-generator" "^0.0.7-alpha.0"
+    "@windsor/ui-kit-icons" "^0.0.7-alpha.0"
+    "@windsor/ui-kit-styled-system" "^0.0.7-alpha.0"
+    "@windsor/ui-kit-theme" "^0.0.7-alpha.0"
     downshift "^3.2.10"
     emotion-theming "^10.0.10"
     react-popper "^1.3.3"
@@ -1812,27 +1813,27 @@
     react-window "^1.8.1"
     styled-system "^4.2.2"
 
-"@windsor/ui-kit-icons@^0.0.2":
-  version "0.0.2"
-  resolved "https://nexus.windsorcloud.com/repository/npm/@windsor/ui-kit-icons/-/ui-kit-icons-0.0.2.tgz#27807376f40f9f28570a9da97589a33d4da67501"
-  integrity sha512-gI2nIQ2nC1UqzDsPMIfSQj8at5QJHEGq+VEleaXtblHQ8bEIY/DX8bANEPokFr4BUqOVVzmk7ExyGKFDa8HfKw==
+"@windsor/ui-kit-icons@^0.0.7-alpha.0":
+  version "0.0.7-alpha.0"
+  resolved "https://nexus.windsorcloud.com/repository/npm/@windsor/ui-kit-icons/-/ui-kit-icons-0.0.7-alpha.0.tgz#323e44221bca9ea64698a26e9870446e2e3d83e6"
+  integrity sha512-BADMMEf+fAzrKHehS0wBIchqZLOmdGsX009huAzZACRWk3Opu82wsWGRq5eFNd1QBduwhO84Tj6FvFpc5cKasw==
   dependencies:
     "@emotion/styled" "^10.0.10"
-    "@windsor/ui-kit-styled-system" "^0.0.2"
-    "@windsor/ui-kit-theme" "^0.0.2"
+    "@windsor/ui-kit-styled-system" "^0.0.7-alpha.0"
+    "@windsor/ui-kit-theme" "^0.0.7-alpha.0"
     lodash "^4.17.11"
 
-"@windsor/ui-kit-styled-system@^0.0.2":
-  version "0.0.2"
-  resolved "https://nexus.windsorcloud.com/repository/npm/@windsor/ui-kit-styled-system/-/ui-kit-styled-system-0.0.2.tgz#ae5f9b8ff858e903118a77602b173001ce1deb92"
-  integrity sha512-mr1ISLFKqGr1jC5NkpE71bbR3x15JGv9iNw1Zd6wl7WfNexaKhWgUypLOL+890SzJFo8XsVv0ILmTk2kgUtT4A==
+"@windsor/ui-kit-styled-system@^0.0.7-alpha.0":
+  version "0.0.7-alpha.0"
+  resolved "https://nexus.windsorcloud.com/repository/npm/@windsor/ui-kit-styled-system/-/ui-kit-styled-system-0.0.7-alpha.0.tgz#b04c58b586aa8d67b1ce02778fb136d8d93b9731"
+  integrity sha512-hIUpEcaOgqjBfQbQYjd1TRQYK4OZWTJ7pkrt/rbVzJvtLq7eX7ixX8jDvicMMRfYxmNyRxcCWyiti6de+y22XA==
   dependencies:
     styled-system "^4.2.2"
 
-"@windsor/ui-kit-theme@^0.0.2":
-  version "0.0.2"
-  resolved "https://nexus.windsorcloud.com/repository/npm/@windsor/ui-kit-theme/-/ui-kit-theme-0.0.2.tgz#1c73cfdbca2204c43e5cc910b1b534924b08fdb3"
-  integrity sha512-wHZEEyi8W+//YV8pqfVwTZBCklOVuHMeS2WKQGZYvD3R2hv3Kru0AFPCR57ttyFCzaWuwT4+c8aRp7m9cWEN0A==
+"@windsor/ui-kit-theme@^0.0.7-alpha.0":
+  version "0.0.7-alpha.0"
+  resolved "https://nexus.windsorcloud.com/repository/npm/@windsor/ui-kit-theme/-/ui-kit-theme-0.0.7-alpha.0.tgz#f6955a8deed0278ae3d6244fa6f5636450d76210"
+  integrity sha512-P7VaT9J+wgGdfxOfeRWlgwnWdABhofAvvU+PFsct4n0F5oPFZp585bVg2iVO93bPGzQ8oPqbPm5oPbjSeDwdrQ==
   dependencies:
     lodash "^4.17.11"
 
@@ -10782,6 +10783,11 @@ tiny-warning@^1.0.2:
   version "1.0.3"
   resolved "https://registry.yarnpkg.com/tiny-warning/-/tiny-warning-1.0.3.tgz#94a30db453df4c643d0fd566060d60a875d84754"
   integrity sha512-lBN9zLN/oAf68o3zNXYrdCt1kP8WsiGW8Oo2ka41b2IM5JL/S1CTyX1rW0mb/zSuJun0ZUrDxx4sqvYS2FWzPA==
+
+tinycolor2@^1.4.1:
+  version "1.4.1"
+  resolved "https://registry.yarnpkg.com/tinycolor2/-/tinycolor2-1.4.1.tgz#f4fad333447bc0b07d4dc8e9209d8f39a8ac77e8"
+  integrity sha1-9PrTM0R7wLB9TcjpIJ2POaisd+g=
 
 tmp@^0.0.33:
   version "0.0.33"

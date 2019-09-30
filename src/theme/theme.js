@@ -1,7 +1,7 @@
 import createTheme from "@windsor/ui-kit-theme";
 import deepmerge from 'deepmerge';
-import defaultBaseColors from '@windsor/ui-kit-theme/res/colors';
-import validateColorSystem from '@windsor/ui-kit-theme/src/colors/internal/validateColorSystem';
+import defaultBaseColors from '@windsor/ui-kit-color-system-generator/src/defaults.json';
+import validateColorSystem from '@windsor/ui-kit-theme/dist/colors/internal/validateColorSystem';
 import colorGen from '@windsor/ui-kit-color-system-generator/src/colors';
 
 const createColors = ({ options }) => {

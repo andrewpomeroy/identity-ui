@@ -19,6 +19,7 @@ import Pager, { Page } from './components/Pager';
 import { validateUsername, authenticate } from './services/mockAuthServices';
 import Alert from './components/Alert';
 import useValidateField from './hooks/useValidateField';
+import ColorPaletteTest from './components/ColorPaletteTest';
 
 const LoginSchema = Yup.object().shape({
   email: Yup.string()
@@ -134,7 +135,6 @@ const EntryView = () => {
                           transitionDirection={transitionDirection}
                           currentPage={currentPage}>
                           <ModalBlockRow>
-
                             <ModalBlockTitle as="div">&nbsp;</ModalBlockTitle>
                             <ModalBlockTitle as="h2">Sign in to your account</ModalBlockTitle>
                             <ModalBlockSpacer size="small" />
