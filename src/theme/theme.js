@@ -1,3 +1,22 @@
+import createTheme from "@windsor/ui-kit-theme";
+import deepmerge from 'deepmerge';
+import defaultBaseColors from '@windsor/ui-kit-theme/res/colors';
+import validateColorSystem from '@windsor/ui-kit-theme/src/colors/internal/validateColorSystem';
+import colorGen from '@windsor/ui-kit-color-system-generator/src/colors';
+
+const createColors = ({ options }) => {
+  const colors = deepmerge(defaultBaseColors, options.colors || {});
+  const colorsOut = Object.keys(colors).reduce((obj, color) => {
+    obj[color] = colorGen.shades(colors[color]);
+    return obj;
+  }, {});
+  validateColorSystem(colorsOut);
+
+  return {
+    ...colorsOut,
+  };
+};
+
 export const typeScale = {
   '-2': 11,
   '-1': 13,
@@ -13,6 +32,7 @@ export const typeScale = {
 export const colors = {
   yellow: '#f6f9d0',
   electricBlue: '#2b88fe',
+  blue: '#2b88fe',
   turquoise: '#5df0f6',
   darkGreen: '#1f5c66',
   // darkGreen: '#0c4f5a',
@@ -28,6 +48,14 @@ export const colors = {
   mediumGray: '#929292',
   white: '#ffffff'
 }
+
+const newColors = createColors({ options: {colors: colors} });
+
+const newTheme = createTheme({
+  colors: newColors
+});
+export const systemColors = newTheme.colors;
+
 export const gradients = {
   hero: `linear-gradient(135deg, ${colors.turquoise}, 31.3%, ${colors.yellow})`
 }
