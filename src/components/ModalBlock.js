@@ -1,11 +1,8 @@
 import styled from '@emotion/styled/macro';
 import { spacing } from '../theme/theme';
 import { Heading4 } from '../theme/commonType';
-import { typeScaleMap, getComputedLineHeight } from '../theme/themeMapping';
+import { typeScale } from '../theme/theme';
 
-// const paddingH = '2.25rem';
-// const paddingTop = '2.5rem';
-// const paddingBottom = '2rem';
 const paddingH = spacing.large * 1;
 const paddingTop = spacing.large * 1.15;
 const paddingBottom = spacing.large * .875;
@@ -13,7 +10,8 @@ const paddingBottom = spacing.large * .875;
 const ModalBlock = styled.div`
   background-color: white;
   padding: ${paddingTop}px ${paddingH}px ${paddingBottom}px;
-  max-width: 480px;
+  /* max-width: 480px; */
+  max-width: 640px;
   width: 100%;
 `
 
@@ -42,8 +40,7 @@ export const ModalBlockTitle = styled(Heading4)`
   }
 `
 export const ModalBlockTitleSmall = styled(ModalBlockTitle)`
-  font-size: ${typeScaleMap.h5}px;
-  /* line-height: ${getComputedLineHeight('h4')}px; */
+  font-size: ${typeScale.h5}px;
   text-overflow: ellipsis;
   overflow: hidden;
 `

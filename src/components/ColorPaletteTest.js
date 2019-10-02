@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { systemColors } from '../theme/theme';
+import { extendedTheme } from '../theme/theme';
 import { FlexContainer } from './commonLayout';
 import styled from '@emotion/styled/macro'
 
@@ -10,20 +10,22 @@ const SquareStyle = styled.div`
   background-color: ${props => props.bg};
 `
 
+const colors = extendedTheme.colors;
+
 const ColorPaletteTest = () => {
   const [hoverName, setHoverName] = useState();
   return (
     <>
       <div>{hoverName || 'none'}</div>
       <FlexContainer horizontal>
-        <>{Object.keys(systemColors).map(colorKey => {
-          if (!systemColors[colorKey][500] || !systemColors[colorKey][500].hex) return null;
+        <>{Object.keys(colors).map(colorKey => {
+          if (!colors[colorKey][500] || !colors[colorKey][500].hex) return null;
           return (
             <Square
               key={colorKey}
               colorKey={colorKey}
               setName={setHoverName}
-              bg={systemColors[colorKey][500].hex}></Square>
+              bg={colors[colorKey][500].hex}></Square>
           )
         })}</>
       </FlexContainer>

@@ -6,6 +6,8 @@
     "@emotion/core": "^10.0.16",
     "@emotion/is-prop-valid": "^0.8.2",
     "@emotion/styled": "^10.0.15",
+    "@styled-system/css": "^5.0.23",
+    "@styled-system/theme-get": "^5.1.2",
     "@windsor/ui-kit-color-system-generator": "^0.0.7-alpha.0",
     "@windsor/ui-kit-core": "^0.0.7-alpha.0",
     "@windsor/ui-kit-styled-system": "^0.0.7-alpha.0",

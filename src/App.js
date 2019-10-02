@@ -4,7 +4,7 @@ import MainView from './MainView';
 // import { BrowserRouter as Router, Route, Link, Redirect } from "react-router-dom";
 import { Global, css } from '@emotion/core';
 import { MainContextProvider } from './context/MainContext';
-import mappedTheme from './theme/themeMapping';
+import { theme, extendedTheme } from './theme/theme';
 
 const globalStyles = css`
   body, input, button, textarea, select, h1, h2, h3, h4, h5, h6 {
@@ -27,7 +27,8 @@ function App(props) {
   return (
     <>
       <Global styles={globalStyles}></Global>
-      <ThemeProvider theme={mappedTheme}>
+      {/* <ThemeProvider theme={theme}> */}
+      <ThemeProvider theme={extendedTheme}>
         <MainContextProvider>
           <MainView></MainView>
         </MainContextProvider>

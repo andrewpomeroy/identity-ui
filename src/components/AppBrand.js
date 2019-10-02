@@ -1,7 +1,6 @@
 import React from 'react';
 import styled from '@emotion/styled/macro';
 import { Heading1 } from '../theme/commonType';
-import { colorMap } from '../theme/themeMapping';
 import { colors } from '../theme/theme';
 
 const AppBrandHeading = styled(Heading1)`
@@ -9,9 +8,9 @@ const AppBrandHeading = styled(Heading1)`
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: .018em;
-  color: ${colorMap.highlightText};
+  color: ${colors.highlightText};
   strong {
-    color: ${colorMap.boldText};
+    color: ${colors.boldText};
     font-weight: 700;
   }
 `

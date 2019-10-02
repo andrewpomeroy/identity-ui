@@ -1,38 +1,38 @@
 import React, { useRef, useEffect } from "react";
-import { colorMap } from "../theme/themeMapping";
 import Color from 'color';
 import styled from "@emotion/styled/macro";
+import { colors } from "../theme/theme";
 
 const inputStyleProps = {
   fontSize: 18,
   paddingH: 16,
   paddingV: 12,
   backgroundColor: 'white',
-  color: colorMap.inputText,
-  // iconColor: colorMap.inputBorder,
+  color: colors.inputText,
+  // iconColor: colors.inputBorder,
   // iconSize: 18,
   borderWidth: 1,
-  borderColor: colorMap.inputBorder,
+  borderColor: colors.inputBorder,
   borderRadius: 3,
   placeholderColor: '#719dff',
   // placeholderColor: Color('#719dff').fade(.5).string(),
 }
 const inputFocusedStyleProps = {
-  borderColor: colorMap.activeHighlight,
-  boxShadow: `0px 0px 2px ${colorMap.activeHighlight}`,
+  borderColor: colors.activeHighlight,
+  boxShadow: `0px 0px 2px ${colors.activeHighlight}`,
   outline: 0
 }
 const inputErrorStyleProps = {
-  borderColor: colorMap.error,
-  backgroundColor: Color(colorMap.error).fade(.9).string(),
-  boxShadow: `0px 0px 2px ${colorMap.error}`,
+  borderColor: colors.error,
+  backgroundColor: Color(colors.error).fade(.9).string(),
+  boxShadow: `0px 0px 2px ${colors.error}`,
   // outline: 0
 }
 
 const inputLabelStyleProps = {
   fontSize: 16,
   fontWeight: 400,
-  color: colorMap.labelText,
+  color: colors.labelText,
   marginBottom: 8
 }
 
@@ -76,7 +76,7 @@ export const InputLabel = styled.label`
   display: inline-block;
   font-size: ${inputLabelStyleProps.fontSize}px;
   font-weight: ${inputLabelStyleProps.fontWeight};
-  color: ${props => props.isError ? colorMap.error : inputLabelStyleProps.color};
+  color: ${props => props.isError ? colors.error : inputLabelStyleProps.color};
   margin-bottom: ${inputLabelStyleProps.marginBottom}px;
 `
 
