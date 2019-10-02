@@ -10,8 +10,8 @@ const paddingBottom = spacing.large * .875;
 const ModalBlock = styled.div`
   background-color: white;
   padding: ${paddingTop}px ${paddingH}px ${paddingBottom}px;
-  /* max-width: 480px; */
-  max-width: 640px;
+  max-width: 480px;
+  /* max-width: 640px; */
   width: 100%;
 `
 
