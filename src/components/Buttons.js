@@ -1,6 +1,5 @@
 import React from 'react';
 import styled from '@emotion/styled/macro';
-import { colorMap } from '../theme/themeMapping';
 import Color from 'color';
 import { borders, color, fontSize, fontWeight } from 'styled-system';
 import { buttonSpacing } from '../styleFunctions/ButtonStyleFunctions';
@@ -49,7 +48,7 @@ const Button = ({isDisabled, children, ...props}) => {
 const GhostButtonStyles = `
   background-color: transparent;
   &:hover, &:focus {
-    background-color: ${colorMap.transparentHighlight};
+    background-color: ${colors.transparentHighlight};
   }
 `;
 
@@ -85,15 +84,15 @@ export const GhostIconButton = styled(IconButton)`
 //     {props.children}</Button>
 // )
 export const PrimaryButton = styled(Button)`
-  background-color: ${colorMap.primary};
+  background-color: ${colors.primary};
   color: ${colors.white};
   font-weight: 500;
   &:not([disabled]) {
     &:hover, &:focus {
-      background-color: ${Color(colorMap.primary).lighten(.05).string()};
+      background-color: ${Color(colors.primary).lighten(.05).string()};
     }
     &:active {
-      background-color: ${Color(colorMap.primary).darken(.1).string()};
+      background-color: ${Color(colors.primary).darken(.1).string()};
     }
   }
 `

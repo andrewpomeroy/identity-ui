@@ -18,6 +18,7 @@ const Container = styled.div`
     height: 100%;
   }
 `
+
 const FilteredContainer = styled(Container, 
   { shouldForwardProp: prop => isPropValid(prop) && prop !== 'stroke' })({});
 

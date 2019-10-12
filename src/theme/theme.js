@@ -1,18 +1,5 @@
-import createTheme, { createColors } from "@windsor/ui-kit-theme";
+import createTheme from "@windsor/ui-kit-theme";
 import Color from 'color';
-
-// const createColors = ({ options }) => {
-//   const colors = deepmerge(defaultBaseColors, options.colors || {});
-//   const colorsOut = Object.keys(colors).reduce((obj, color) => {
-//     obj[color] = colorGen.shades(colors[color]);
-//     return obj;
-//   }, {});
-//   validateColorSystem(colorsOut);
-
-//   return {
-//     ...colorsOut,
-//   };
-// };
 
 export const typeScale = {
   '-2': 11,
@@ -94,9 +81,6 @@ colors.cardText = colors.darkBlue;
 colors.listBackground = colors.nearWhite;
 colors.transparentHighlight = Color(colors.electricBlue).saturationl(100).lightness(98).string();
 colors.lightSeparator = 'gainsboro';
-
-const newColors = createColors({ options: {colors: colors} });
-
 export const buttonVariants = {
   // primary: {
   //   backgroundColor: "blue",
@@ -122,7 +106,7 @@ export const buttonVariants = {
 }
 
 export const themeObject = createTheme({
-  colors: newColors,
+  colors: colors,
 });
 
 export const extendedTheme = {
