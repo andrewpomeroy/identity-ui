@@ -20,7 +20,7 @@ const SvgWrap = styled.div`
     ${props => props.stroke && `stroke: currentColor;`}
     ${props => props.stroke && `stroke-width: inherit;`}
     width: 100%;
-    height 100%;
+    height: 100%;
   }
 `
 
